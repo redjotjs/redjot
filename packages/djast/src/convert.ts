@@ -168,7 +168,7 @@ export function convertRecord(
 	)
 }
 
-export function fromDjotDoc(ast: djot.Doc): Parent {
+export function fromDjotDoc(ast: djot.Doc): Document {
 	const out: Document = {
 		type: "document",
 		references: convertRecord(ast.references),
