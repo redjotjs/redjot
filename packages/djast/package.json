@@ -1,5 +1,5 @@
 {
-	"name": "redjot-parse",
+	"name": "djast",
 	"version": "0.1.0",
 	"author": "Andrej Kolčin <self@kaathewise.net>",
 	"description": "Unist-compatible Djot syntax tree",
@@ -8,7 +8,6 @@
 	"files": "src/",
 	"type": "module",
 	"dependencies": {
-		"@djot/djot": "^0.3.2",
 		"unist": "^0.0.1"
 	}
 }

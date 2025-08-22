@@ -17,7 +17,6 @@ export type {
 	OrderedListStyle,
 	SmartPunctuationType,
 } from "@djot/djot"
-export { fromDjotAstNode, fromDjotDoc } from "./convert"
 
 export interface Node extends UnistNode {
 	attributes?: Attributes
