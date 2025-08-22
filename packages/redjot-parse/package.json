@@ -10,6 +10,6 @@
 	"dependencies": {
 		"@djot/djot": "^0.3.2",
 		"unified": "^11.0.5",
-		"unist": "^0.0.1"
+		"djast": "^0.1.0"
 	}
 }
