@@ -1,7 +1,7 @@
 import * as djot from "@djot/djot"
+import type { Document } from "djast"
+import { fromDjotDoc } from "djast-util-from-djot"
 import type { Processor } from "unified"
-// TODO
-import { type Document, fromDjotDoc } from "../../djast/src"
 
 export default function redjotParse(this: Processor): void {
 	this.parser = parse
