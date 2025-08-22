@@ -7,7 +7,7 @@
 	"workspaces": [
 		"packages/djast",
 		"packages/djast-util-from-djot",
-		"packages/metadata/",
+		"packages/redjot-metadata/",
 		"packages/redjot-parse/"
 	],
 	"scripts": {
