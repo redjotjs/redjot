@@ -4,7 +4,7 @@
 		"module": "ESNext",
 		"strict": true,
 		"skipLibCheck": true,
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"allowSyntheticDefaultImports": true
 	},
 	"include": ["packages/*/src/**/*.ts"]
