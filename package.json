@@ -5,8 +5,10 @@
 	"type": "module",
 	"private": true,
 	"workspaces": [
+		"packages/djast",
+		"packages/djast-util-from-djot",
 		"packages/metadata/",
-		"packages/parse/"
+		"packages/redjot-parse/"
 	],
 	"scripts": {
 		"check": "biome check && tsc --noEmit",
