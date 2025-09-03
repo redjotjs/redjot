@@ -1,5 +1,5 @@
 import * as djot from "@djot/djot"
-import type { AstNode, Block, Document, Literal, Node, Parent } from "djast"
+import type { AstNode, Block, Document, Literal, Parent } from "djast"
 import type { Position } from "unist"
 
 function posDjotToUnist(pos: djot.Pos | undefined): Position | undefined {

@@ -1,5 +1,4 @@
 import * as djot from "@djot/djot"
-import type { Document } from "djast"
 import { fromDjot } from "djast-util-from-djot"
 import type { Processor } from "unified"
 
