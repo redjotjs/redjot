@@ -1,4 +1,12 @@
-import type { Document, Node, Block, Inline, Literal, AstNode } from "djast"
+import type {
+	Document,
+	Node,
+	Block,
+	Inline,
+	Literal,
+	AstNode,
+	SmartPunctuationType,
+} from "djast"
 import type {
 	Root,
 	Element as HastElement,
@@ -81,7 +89,11 @@ export function convertNode(node: AstNode): HastElement | HastText | null {
 			todo()
 		}
 		case "smartPunctuation": {
-			todo()
+			return {
+				type: "text",
+				value: punctuation(node.kind),
+				position: node.position,
+			}
 		}
 		case "softBreak": {
 			return { type: "text", value: " " }
@@ -217,4 +229,30 @@ function convertNodeList(nodes: AstNode[]): (HastElement | HastText)[] {
 
 function todo(msg?: "string"): never {
 	throw new Error(`TODO: ${msg ?? "Not yet implemented"}`)
+}
+
+function punctuation(kind: SmartPunctuationType): string {
+	switch (kind) {
+		case "left_single_quote": {
+			return "'"
+		}
+		case "right_single_quote": {
+			return "'"
+		}
+		case "left_double_quote": {
+			return '"'
+		}
+		case "right_double_quote": {
+			return '"'
+		}
+		case "ellipses": {
+			return "..."
+		}
+		case "en_dash": {
+			return "–"
+		}
+		case "em_dash": {
+			return "—"
+		}
+	}
 }
