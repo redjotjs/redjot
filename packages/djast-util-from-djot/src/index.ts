@@ -1,4 +1,4 @@
-import type * as djot from "@djot/djot"
+import * as djot from "@djot/djot"
 import type { Block, Document, Literal, Node, Parent } from "djast"
 import type { Position } from "unist"
 
@@ -182,4 +182,8 @@ export function fromDjotDoc(ast: djot.Doc): Document {
 	out.children = ast.children.map(fromDjotAstNode) as Block[]
 
 	return out
+}
+
+export function fromDjot(value: string): Document {
+	return fromDjotDoc(djot.parse(value, { sourcePositions: true }))
 }
