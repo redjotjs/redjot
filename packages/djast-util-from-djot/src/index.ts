@@ -1,5 +1,5 @@
 import * as djot from "@djot/djot"
-import type { Block, Document, Literal, Node, Parent } from "djast"
+import type { AstNode, Block, Document, Literal, Node, Parent } from "djast"
 import type { Position } from "unist"
 
 function posDjotToUnist(pos: djot.Pos | undefined): Position | undefined {
@@ -127,8 +127,9 @@ function convertType(tag: string): string {
 	}
 }
 
-export function fromDjotAstNode(node: djot.AstNode): Node {
-	const out: Node = {
+export function fromDjotAstNode(node: djot.AstNode): AstNode {
+	const out: AstNode = {
+		// @ts-expect-error
 		type: convertType(node.tag),
 		attributes: node.attributes,
 		autoAttributes: node.autoAttributes,
