@@ -116,7 +116,9 @@ export function convertNode(node: AstNode): HastElement | HastText | null {
 			todo()
 		}
 		case "link": {
-			todo()
+			const out = makeElement(node, "a")
+			out.properties.href = `#${node.reference}`
+			return out
 		}
 		case "image": {
 			todo()
@@ -213,6 +215,6 @@ function convertNodeList(nodes: AstNode[]): (HastElement | HastText)[] {
 	return out
 }
 
-function todo(): never {
-	throw new Error("TODO: Not yet implemented.")
+function todo(msg?: "string"): never {
+	throw new Error(`TODO: ${msg ?? "Not yet implemented"}`)
 }
