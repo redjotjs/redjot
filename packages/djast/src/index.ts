@@ -27,7 +27,9 @@ export interface Literal extends Node, UnistLiteral {
 	value: string
 }
 
-export interface Parent extends Node, UnistParent {}
+export interface Parent extends Node, UnistParent {
+	children: AstNode[]
+}
 
 export interface BlockParent extends Parent {
 	children: Block[]
@@ -307,3 +309,18 @@ export interface Footnote extends BlockParent {
 	type: "footnote"
 	label: string
 }
+
+export type AstNode =
+	| Document
+	| Block
+	| Inline
+	| ListItem
+	| TaskListItem
+	| DefinitionListItem
+	| Term
+	| Definition
+	| Row
+	| Cell
+	| Caption
+	| Footnote
+	| Reference
