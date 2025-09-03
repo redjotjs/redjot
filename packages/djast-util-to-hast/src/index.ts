@@ -10,13 +10,13 @@ import type { Node as UnistNode } from "unist"
 export function toHast(tree: Document, _options: null): Root {
 	const out: Root = {
 		type: "root",
-		children: tree.children.map(convertNode),
+		children: convertNodeList(tree.children),
 	}
 
 	return out
 }
 
-export function convertNode(node: AstNode): HastElement | HastText {
+export function convertNode(node: AstNode): HastElement | HastText | null {
 	switch (node.type) {
 		case "paragraph": {
 			return makeElement(node, "p")
@@ -84,8 +84,7 @@ export function convertNode(node: AstNode): HastElement | HastText {
 			todo()
 		}
 		case "softBreak": {
-			// ?
-			todo()
+			return null
 		}
 		case "hardBreak": {
 			return makeElement(node, "br")
@@ -195,13 +194,22 @@ function makeElement(node: AstNode, tagName: string): HastElement {
 	}
 
 	if ("children" in node) {
-		for (const child of node.children) {
-			out.children.push(convertNode(child))
-		}
+		out.children = convertNodeList(node.children)
 	} else if ("value" in node) {
 		out.children.push({ type: "text", value: node.value })
 	}
 
+	return out
+}
+
+function convertNodeList(nodes: AstNode[]): (HastElement | HastText)[] {
+	const out = []
+	for (const node of nodes) {
+		const hastNode = convertNode(node)
+		if (hastNode) {
+			out.push(hastNode)
+		}
+	}
 	return out
 }
 
