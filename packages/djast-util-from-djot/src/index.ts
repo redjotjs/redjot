@@ -85,7 +85,7 @@ function convertType(tag: string): string {
 		case "image":
 			return "image"
 		case "emph":
-			return "emph"
+			return "emphasis"
 		case "strong":
 			return "strong"
 		case "span":
