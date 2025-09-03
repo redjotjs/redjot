@@ -2,7 +2,7 @@
 	"name": "djast-util-to-hast",
 	"version": "0.1.0",
 	"author": "Andrej Kolčin <self@kaathewise.net>",
-	"description": "Convert Djot.js AST to HTML AST",
+	"description": "Convert djast to hast",
 	"license": "MPL-2.0",
 	"exports": "./src/index.ts",
 	"type": "module",
