@@ -9,7 +9,8 @@
 		"packages/djast-util-from-djot",
 		"packages/djast-util-to-hast",
 		"packages/redjot-metadata/",
-		"packages/redjot-parse/"
+		"packages/redjot-parse/",
+		"packages/redjot-rehype"
 	],
 	"scripts": {
 		"check": "biome check && tsc --noEmit",

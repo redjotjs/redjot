@@ -52,6 +52,16 @@
         "unified": "^11.0.5",
       },
     },
+    "packages/redjot-rehype": {
+      "name": "redjot-rehype",
+      "version": "0.1.0",
+      "dependencies": {
+        "@types/hast": "^3.0.4",
+        "djast": "^0.1.0",
+        "djast-util-to-hast": "^0.1.0",
+        "unist": "^0.0.1",
+      },
+    },
   },
   "packages": {
     "@biomejs/biome": ["@biomejs/biome@2.2.2", "", { "optionalDependencies": { "@biomejs/cli-darwin-arm64": "2.2.2", "@biomejs/cli-darwin-x64": "2.2.2", "@biomejs/cli-linux-arm64": "2.2.2", "@biomejs/cli-linux-arm64-musl": "2.2.2", "@biomejs/cli-linux-x64": "2.2.2", "@biomejs/cli-linux-x64-musl": "2.2.2", "@biomejs/cli-win32-arm64": "2.2.2", "@biomejs/cli-win32-x64": "2.2.2" }, "bin": { "biome": "bin/biome" } }, "sha512-j1omAiQWCkhuLgwpMKisNKnsM6W8Xtt1l0WZmqY/dFj8QPNkIoTvk4tSsi40FaAAkBE1PU0AFG2RWFBWenAn+w=="],
@@ -97,6 +107,8 @@
     "redjot-metadata": ["redjot-metadata@workspace:packages/redjot-metadata"],
 
     "redjot-parse": ["redjot-parse@workspace:packages/redjot-parse"],
+
+    "redjot-rehype": ["redjot-rehype@workspace:packages/redjot-rehype"],
 
     "trough": ["trough@2.2.0", "", {}, "sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw=="],
 
