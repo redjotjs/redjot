@@ -1,5 +1,12 @@
 import * as djot from "@djot/djot"
-import type { AstNode, Block, Document, Literal, Parent } from "djast"
+import type {
+	AstNode,
+	Block,
+	Document,
+	Literal,
+	Parent,
+	SmartPunctuation,
+} from "djast"
 import type { Position } from "unist"
 
 function posDjotToUnist(pos: djot.Pos | undefined): Position | undefined {
@@ -20,7 +27,7 @@ function posDjotToUnist(pos: djot.Pos | undefined): Position | undefined {
 	}
 }
 
-const IGNORE = ["tag", "children", "pos", "text"]
+const IGNORE = ["type", "tag", "children", "pos", "text"]
 
 function convertType(tag: string): string {
 	switch (tag) {
@@ -138,6 +145,10 @@ export function fromDjotAstNode(node: djot.AstNode): AstNode {
 
 	if ("text" in node) {
 		;(out as Literal).value = node.text
+	}
+
+	if (node.tag === "smart_punctuation") {
+		;(out as SmartPunctuation).kind = node.type
 	}
 
 	for (const [key, value] of Object.entries(node)) {
