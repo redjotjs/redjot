@@ -1,13 +1,12 @@
 {
 	"name": "djast",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"author": "Andrej Kolčin <self@kaathewise.net>",
 	"description": "Unist-compatible Djot syntax tree",
 	"license": "MPL-2.0",
 	"exports": "./src/index.ts",
-	"files": "src/",
 	"type": "module",
 	"dependencies": {
-		"unist": "^0.0.1"
+		"@types/unist": "^3.0.3"
 	}
 }

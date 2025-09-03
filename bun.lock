@@ -11,55 +11,54 @@
     },
     "packages/djast": {
       "name": "djast",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
-        "unist": "^0.0.1",
+        "@types/unist": "^3.0.3",
       },
     },
     "packages/djast-util-from-djot": {
       "name": "djast-util-from-djot",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@djot/djot": "^0.3.2",
-        "djast": "^0.1.0",
-        "unist": "^0.0.1",
+        "@types/unist": "^3.0.3",
+        "djast": "^0.2.0",
       },
     },
     "packages/djast-util-to-hast": {
       "name": "djast-util-to-hast",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@types/hast": "^3.0.4",
-        "djast": "^0.1.0",
-        "unist": "^0.0.1",
+        "djast": "^0.2.0",
         "unist-util-visit": "^5.0.0",
       },
     },
     "packages/redjot-metadata": {
       "name": "redjot-metadata",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
-        "djast": "^0.1.0",
+        "djast": "^0.2.0",
         "unified": "^11.0.5",
       },
     },
     "packages/redjot-parse": {
       "name": "redjot-parse",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
-        "djast": "^0.1.0",
-        "djast-util-from-djot": "^0.1.0",
+        "djast": "^0.2.0",
+        "djast-util-from-djot": "^0.2.0",
         "unified": "^11.0.5",
       },
     },
     "packages/redjot-rehype": {
       "name": "redjot-rehype",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@types/hast": "^3.0.4",
-        "djast": "^0.1.0",
-        "djast-util-to-hast": "^0.1.0",
-        "unist": "^0.0.1",
+        "@types/unist": "^3.0.3",
+        "djast": "^0.2.0",
+        "djast-util-to-hast": "^0.2.0",
       },
     },
   },
@@ -117,8 +116,6 @@
     "typescript-language-server": ["typescript-language-server@4.4.0", "", { "bin": { "typescript-language-server": "lib/cli.mjs" } }, "sha512-enWhplhHX7PA0q+IcKHBMpTQh9I2Bmb3L45rwnkATHMsZ7YLduyyCdOmVUWJSYZfkWaBMiKwi/e2FQo4xsKeWw=="],
 
     "unified": ["unified@11.0.5", "", { "dependencies": { "@types/unist": "^3.0.0", "bail": "^2.0.0", "devlop": "^1.0.0", "extend": "^3.0.0", "is-plain-obj": "^4.0.0", "trough": "^2.0.0", "vfile": "^6.0.0" } }, "sha512-xKvGhPWw3k84Qjh8bI3ZeJjqnyadK+GEFtazSfZv/rKeTkTjOJho6mFqh2SM96iIcZokxiOpg78GazTSg8+KHA=="],
-
-    "unist": ["unist@0.0.1", "", {}, "sha512-bnzuF8b6d47WubA4a5yLqFbuZz/v/NS6eRwUIdOaDmsqzwTlyv8yS1g3M7ISdtBQrigPD3qKK87Cu7zhEfCF3A=="],
 
     "unist-util-is": ["unist-util-is@6.0.0", "", { "dependencies": { "@types/unist": "^3.0.0" } }, "sha512-2qCTHimwdxLfz+YzdGfkqNlH0tLi9xjTnHddPmJwtIG9MGsdbutfTc4P+haPD7l7Cjxf/WZj+we5qfVPvvxfYw=="],
 

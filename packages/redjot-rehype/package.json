@@ -1,15 +1,14 @@
 {
 	"name": "redjot-rehype",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"author": "Andrej Kolčin <self@kaathewise.net>",
 	"description": "Convert Djot to HTML",
 	"license": "MPL-2.0",
-	"exports": "./src/index.ts",
 	"type": "module",
 	"dependencies": {
 		"@types/hast": "^3.0.4",
-		"djast": "^0.1.0",
-		"djast-util-to-hast": "^0.1.0",
-		"unist": "^0.0.1"
+		"@types/unist": "^3.0.3",
+		"djast": "^0.2.0",
+		"djast-util-to-hast": "^0.2.0"
 	}
 }
