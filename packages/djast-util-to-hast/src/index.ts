@@ -84,7 +84,7 @@ export function convertNode(node: AstNode): HastElement | HastText | null {
 			todo()
 		}
 		case "softBreak": {
-			return null
+			return { type: "text", value: " " }
 		}
 		case "hardBreak": {
 			return makeElement(node, "br")
