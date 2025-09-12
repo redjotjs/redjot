@@ -1,9 +1,9 @@
 import { test } from "bun:test"
 import assert from "node:assert/strict"
-import redjotParse from "../../redjot-parse/src"
-import redjotRehype from "."
 import rehypeStringify from "rehype-stringify"
 import { unified } from "unified"
+import redjotParse from "../../redjot-parse/src"
+import redjotRehype from "."
 
 const processor = unified()
 	.use(redjotParse)

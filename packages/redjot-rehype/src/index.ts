@@ -1,9 +1,7 @@
+import type { Document } from "djast"
 import { toHast } from "djast-util-to-hast"
 import type { Root } from "hast"
-import type { Document } from "djast"
 
-export default function redjotRehype(destination, options: null) {
-	return function (tree: Document): Root {
-		return toHast(tree, options)
-	}
+export default function redjotRehype(_destination, options: null) {
+	return (tree: Document): Root => toHast(tree, options)
 }

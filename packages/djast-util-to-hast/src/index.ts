@@ -1,17 +1,17 @@
 import type {
-	Document,
-	Node,
+	AstNode,
 	Block,
+	Document,
 	Inline,
 	Literal,
-	AstNode,
+	Node,
 	SmartPunctuationType,
 } from "djast"
 import type {
-	Root,
 	Element as HastElement,
-	Text as HastText,
 	ElementContent as HastElementContent,
+	Text as HastText,
+	Root,
 } from "hast"
 import type { Node as UnistNode } from "unist"
 
@@ -56,6 +56,7 @@ export function convertNode(node: AstNode): HastElement | HastText | null {
 		}
 		case "raw": {
 			const out = makeElement(node, "pre")
+			todo()
 		}
 		case "list": {
 			return makeElement(node, "ul")
