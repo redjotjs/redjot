@@ -5,12 +5,12 @@
 	"type": "module",
 	"private": true,
 	"workspaces": [
-		"packages/djast",
-		"packages/djast-util-from-djot",
-		"packages/djast-util-to-hast",
+		"packages/djast/",
+		"packages/djast-util-from-djot/",
+		"packages/djast-util-to-hast/",
 		"packages/redjot-metadata/",
 		"packages/redjot-parse/",
-		"packages/redjot-rehype"
+		"packages/redjot-rehype/"
 	],
 	"scripts": {
 		"check": "biome check && tsc --noEmit",

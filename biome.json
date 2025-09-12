@@ -3,8 +3,7 @@
 		"includes": [
 			"*.json",
 			"packages/*/*.json",
-			"packages/*/src/**/*.ts",
-			"src/**/*.ts"
+			"packages/*/src/**/*.ts"
 		]
 	},
 	"javascript": {
