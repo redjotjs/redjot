@@ -10,5 +10,9 @@
 		"@types/unist": "^3.0.3",
 		"djast": "^0.2.0",
 		"djast-util-to-hast": "^0.2.0"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.2.21",
+		"unified": "^11.0.5"
 	}
 }
