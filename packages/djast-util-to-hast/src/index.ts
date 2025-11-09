@@ -5,6 +5,8 @@ import type {
 	Inline,
 	Literal,
 	Node,
+	Raw,
+	RawInline,
 	SmartPunctuationType,
 } from "djast"
 import type {
@@ -55,8 +57,7 @@ export function convertNode(node: AstNode): HastElement | HastText | null {
 			return out
 		}
 		case "raw": {
-			const out = makeElement(node, "pre")
-			todo()
+			return makeRaw(node)
 		}
 		case "list": {
 			return makeElement(node, "ul")
@@ -112,16 +113,7 @@ export function convertNode(node: AstNode): HastElement | HastText | null {
 			return makeElement(node, "code")
 		}
 		case "rawInline": {
-			return {
-				// Raw nodes aren't in the hast API, but they
-				// are used by `rehype-raw` and are supported
-				// by `rehype-stringify`
-
-				// @ts-expect-error
-				type: "raw",
-				position: node.position,
-				value: node.value,
-			}
+			return makeRaw(node)
 		}
 		case "inlineMath": {
 			todo()
@@ -224,6 +216,24 @@ function makeElement(node: AstNode, tagName: string): HastElement {
 	}
 
 	return out
+}
+
+function makeRaw(node: RawInline | Raw): HastElement | HastText {
+	if (node.format === "html") {
+		return {
+			// Raw nodes aren't in the hast API, but they
+			// are used by `rehype-raw` and are supported
+			// by `rehype-stringify`
+
+			// @ts-expect-error
+			type: "raw",
+			position: node.position,
+			value: node.value,
+		}
+	} else {
+		// TODO: is there a better way to skip an element?
+		return { type: "text", value: "" }
+	}
 }
 
 function convertNodeList(nodes: AstNode[]): (HastElement | HastText)[] {
