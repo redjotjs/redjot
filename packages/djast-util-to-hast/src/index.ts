@@ -112,7 +112,16 @@ export function convertNode(node: AstNode): HastElement | HastText | null {
 			return makeElement(node, "code")
 		}
 		case "rawInline": {
-			todo()
+			return {
+				// Raw nodes aren't in the hast API, but they
+				// are used by `rehype-raw` and are supported
+				// by `rehype-stringify`
+
+				// @ts-expect-error
+				type: "raw",
+				position: node.position,
+				value: node.value,
+			}
 		}
 		case "inlineMath": {
 			todo()
