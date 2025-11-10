@@ -213,11 +213,9 @@ export function convertNode(node: AstNode): HastElement | HastText {
 		case "reference": {
 			todo()
 		}
-		case "footnote": {
-			todo("unreachable")
-		}
+		case "footnote":
 		case "document": {
-			todo()
+			unreachable()
 		}
 	}
 }
@@ -318,6 +316,10 @@ function convertNodeList(nodes: AstNode[]): (HastElement | HastText)[] {
 
 function todo(msg?: string): never {
 	throw new Error(`TODO: ${msg ?? "Not yet implemented"}`)
+}
+
+function unreachable(): never {
+	throw new Error("This branch must not be reached")
 }
 
 function punctuation(kind: SmartPunctuationType): string {
