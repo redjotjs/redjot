@@ -2,10 +2,12 @@ import type {
 	AstNode,
 	Block,
 	Document,
+	FootnoteReference,
 	Inline,
 	Literal,
 	Node,
 	Raw,
+	Footnote,
 	RawInline,
 	SmartPunctuationType,
 } from "djast"
@@ -18,15 +20,17 @@ import type {
 import type { Node as UnistNode } from "unist"
 
 export function toHast(tree: Document, _options: null): Root {
+	const body = convertNodeList(tree.children)
+	const endnotes = convertFootnotes(tree.footnotes)
 	const out: Root = {
 		type: "root",
-		children: convertNodeList(tree.children),
+		children: [...body, endnotes],
 	}
 
 	return out
 }
 
-export function convertNode(node: AstNode): HastElement | HastText | null {
+export function convertNode(node: AstNode): HastElement | HastText {
 	switch (node.type) {
 		case "paragraph": {
 			return makeElement(node, "p")
@@ -88,7 +92,28 @@ export function convertNode(node: AstNode): HastElement | HastText | null {
 			}
 		}
 		case "footnoteReference": {
-			todo()
+			const refName: HastText = {
+				type: "text",
+				value: node.value,
+			}
+			const sup: HastElement = {
+				type: "element",
+				tagName: "sup",
+				children: [refName],
+				properties: {},
+			}
+			return {
+				type: "element",
+				tagName: "a",
+				children: [sup],
+				properties: {
+					...node.attributes,
+					...node.autoAttributes,
+					href: `#fn:${node.value}`,
+					id: `fnref:${node.value}`,
+				},
+				position: node.position,
+			}
 		}
 		case "smartPunctuation": {
 			return {
@@ -189,12 +214,56 @@ export function convertNode(node: AstNode): HastElement | HastText | null {
 			todo()
 		}
 		case "footnote": {
-			todo()
+			todo("unreachable")
 		}
 		case "document": {
 			todo()
 		}
 	}
+}
+
+function convertFootnote(footnote: Footnote): HastElement {
+	const out = makeElement(footnote, "li")
+	out.properties.id = `fn:${footnote.label}`
+	const backlink: HastElement = {
+		type: "element",
+		tagName: "a",
+		properties: {
+			href: `#fnref:${footnote.label}`,
+			role: "doc-backlink",
+		},
+		children: [{ type: "text", value: "↩" }],
+	}
+	out.children.push(backlink)
+	return out
+}
+
+function convertFootnotes(footnotes: Record<string, Footnote>): HastElement {
+	const hr: HastElement = {
+		type: "element",
+		tagName: "hr",
+		children: [],
+		properties: {},
+	}
+
+	const footnoteList = Object.values(footnotes).map(convertFootnote)
+	const ol: HastElement = {
+		type: "element",
+		tagName: "ol",
+		children: footnoteList,
+		properties: {},
+	}
+
+	const endnotes: HastElement = {
+		type: "element",
+		tagName: "section",
+		properties: {
+			role: "doc-endnotes",
+		},
+		children: [hr, ol],
+	}
+
+	return endnotes
 }
 
 function makeElement(node: AstNode, tagName: string): HastElement {
@@ -247,7 +316,7 @@ function convertNodeList(nodes: AstNode[]): (HastElement | HastText)[] {
 	return out
 }
 
-function todo(msg?: "string"): never {
+function todo(msg?: string): never {
 	throw new Error(`TODO: ${msg ?? "Not yet implemented"}`)
 }
 
