@@ -160,7 +160,19 @@ export function convertNode(node: AstNode): HastElement | HastText {
 			return out
 		}
 		case "image": {
-			todo()
+			// TODO: reference
+			// TODO: alt
+			return {
+				type: "element",
+				tagName: "img",
+				properties: {
+					...node.attributes,
+					...node.autoAttributes,
+					src: node.destination,
+				},
+				children: [],
+				position: node.position,
+			}
 		}
 		case "emphasis": {
 			return makeElement(node, "em")
