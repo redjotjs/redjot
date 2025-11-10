@@ -10,6 +10,8 @@ import type {
 	Footnote,
 	RawInline,
 	SmartPunctuationType,
+	Image,
+	Link,
 } from "djast"
 import type {
 	Element as HastElement,
@@ -20,9 +22,9 @@ import type {
 import type { Node as UnistNode } from "unist"
 
 export function toHast(tree: Document, options: Options): Root {
-	const converter = new Converter(options)
+	const converter = new Converter(tree, options)
 	console.log(tree)
-	return converter.convertDocument(tree)
+	return converter.convert()
 }
 
 export type Options = {
@@ -49,16 +51,19 @@ class Converter {
 			em_dash: "—",
 		},
 	}
+	tree: Document
 
-	constructor(options: Options) {
+	constructor(tree: Document, options: Options) {
+		this.tree = tree
 		this.options = { ...this.options, ...options }
 	}
 
-	convertDocument(tree: Document): Root {
-		const children = this.convertNodeList(tree.children)
+	convert(): Root {
+		const children = this.convertNodeList(this.tree.children)
 
-		if (Object.keys(tree.footnotes).length > 0) {
-			const endnotes = this.convertFootnotes(tree.footnotes)
+		const footnotes = this.tree.footnotes
+		if (Object.keys(footnotes).length > 0) {
+			const endnotes = this.convertFootnotes(footnotes)
 			children.push(endnotes)
 		}
 
@@ -194,12 +199,15 @@ class Converter {
 				todo()
 			}
 			case "link": {
+				const target = this.getTarget(node)
+				console.log("target", target)
 				return this.makeElement(node, "a", {
-					href: `#${node.reference}`,
+					href: target,
 				})
 			}
 			case "image": {
 				// TODO: alt
+				const target = this.getTarget(node)
 				return makeNode(node, "img", {
 					src:
 						node.destination ??
@@ -326,7 +334,7 @@ class Converter {
 		tagName: string,
 		properties?: Record<string, string>,
 	): HastElement {
-		const out = makeNode(node, tagName)
+		const out = makeNode(node, tagName, properties)
 
 		if ("children" in node) {
 			out.children = this.convertNodeList(node.children)
@@ -335,6 +343,17 @@ class Converter {
 		}
 
 		return out
+	}
+
+	getTarget(node: Image | Link): string {
+		if (node.destination) {
+			return node.destination
+		} else if (node.reference) {
+			const ref = this.tree.references[node.reference]
+			return ref.destination
+		} else {
+			unreachable()
+		}
 	}
 }
 
