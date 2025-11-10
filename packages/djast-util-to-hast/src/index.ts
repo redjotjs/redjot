@@ -52,12 +52,12 @@ export function convertNode(node: AstNode): HastElement | HastText {
 		}
 		case "code": {
 			const out = makeElement(node, "pre")
-			out.children.push({
+			out.children[0] = {
 				type: "element",
 				tagName: "code",
 				properties: { lang: node.lang },
 				children: [{ type: "text", value: node.value }],
-			})
+			}
 			return out
 		}
 		case "raw": {
@@ -102,18 +102,12 @@ export function convertNode(node: AstNode): HastElement | HastText {
 				children: [refName],
 				properties: {},
 			}
-			return {
-				type: "element",
-				tagName: "a",
-				children: [sup],
-				properties: {
-					...node.attributes,
-					...node.autoAttributes,
-					href: `#fn:${node.value}`,
-					id: `fnref:${node.value}`,
-				},
-				position: node.position,
-			}
+			const out = makeNode(node, "a", {
+				href: `#fn:${node.value}`,
+				id: `fnref:${node.value}`,
+			})
+			out.children.push(sup)
+			return out
 		}
 		case "smartPunctuation": {
 			return {
@@ -147,32 +141,23 @@ export function convertNode(node: AstNode): HastElement | HastText {
 			todo()
 		}
 		case "url": {
-			const out = makeElement(node, "url")
-			out.properties.href = node.value
-			return out
+			return makeElement(node, "url", {
+				href: node.value,
+			})
 		}
 		case "email": {
 			todo()
 		}
 		case "link": {
-			const out = makeElement(node, "a")
-			out.properties.href = `#${node.reference}`
-			return out
+			return makeElement(node, "a", {
+				href: `#${node.reference}`,
+			})
 		}
 		case "image": {
-			// TODO: reference
 			// TODO: alt
-			return {
-				type: "element",
-				tagName: "img",
-				properties: {
-					...node.attributes,
-					...node.autoAttributes,
-					src: node.destination,
-				},
-				children: [],
-				position: node.position,
-			}
+			return makeNode(node, "img", {
+				src: node.destination ?? "TODO: reference",
+			})
 		}
 		case "emphasis": {
 			return makeElement(node, "em")
@@ -276,17 +261,30 @@ function convertFootnotes(footnotes: Record<string, Footnote>): HastElement {
 	return endnotes
 }
 
-function makeElement(node: AstNode, tagName: string): HastElement {
-	const out: HastElement = {
+function makeNode(
+	node: AstNode,
+	tagName: string,
+	properties?: Record<string, string>,
+): HastElement {
+	return {
 		type: "element",
 		tagName: tagName,
 		properties: {
 			...node.attributes,
 			...node.autoAttributes,
+			...properties,
 		},
 		children: [],
 		position: node.position,
 	}
+}
+
+function makeElement(
+	node: AstNode,
+	tagName: string,
+	properties?: Record<string, string>,
+): HastElement {
+	const out = makeNode(node, tagName)
 
 	if ("children" in node) {
 		out.children = convertNodeList(node.children)
