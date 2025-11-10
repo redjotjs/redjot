@@ -21,6 +21,7 @@ import type { Node as UnistNode } from "unist"
 
 export function toHast(tree: Document, options: Options): Root {
 	const converter = new Converter(options)
+	console.log(tree)
 	return converter.convertDocument(tree)
 }
 
@@ -54,11 +55,16 @@ class Converter {
 	}
 
 	convertDocument(tree: Document): Root {
-		const body = this.convertNodeList(tree.children)
-		const endnotes = this.convertFootnotes(tree.footnotes)
+		const children = this.convertNodeList(tree.children)
+
+		if (Object.keys(tree.footnotes).length > 0) {
+			const endnotes = this.convertFootnotes(tree.footnotes)
+			children.push(endnotes)
+		}
+
 		return {
 			type: "root",
-			children: [...body, endnotes],
+			children,
 		}
 	}
 
@@ -293,8 +299,8 @@ class Converter {
 			properties: {},
 		}
 
-		const footnoteList = Object.values(footnotes).map(
-			this.convertFootnote,
+		const footnoteList = Object.values(footnotes).map(f =>
+			this.convertFootnote(f),
 		)
 		const ol: HastElement = {
 			type: "element",
