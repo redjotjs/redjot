@@ -163,10 +163,20 @@ class Converter {
 				break
 			}
 			case "caption": {
-				todo()
+				dst.push(this.makeElement(node, "caption"))
+				break
 			}
 			case "table": {
-				todo()
+				const table = makeNode(node, "table")
+
+				const [caption, ...rows] = node.children
+
+				this.convertNode(caption, table.children)
+				this.convertNodeList(rows, table.children)
+
+				dst.push(table)
+
+				break
 			}
 			case "text": {
 				dst.push({
@@ -369,7 +379,11 @@ class Converter {
 				break
 			}
 			case "cell": {
-				dst.push(this.makeElement(node, "th"))
+				dst.push(
+					this.makeElement(node, "th", {
+						"data-alignment": node.align,
+					}),
+				)
 				break
 			}
 			case "reference": {
