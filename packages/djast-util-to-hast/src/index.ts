@@ -198,7 +198,12 @@ class Converter {
 				break
 			}
 			case "nonBreakingSpace": {
-				todo()
+				dst.push({
+					type: "text",
+					value: "\u00A0",
+					position: node.position,
+				})
+				break
 			}
 			case "symbol": {
 				todo()
@@ -226,7 +231,11 @@ class Converter {
 				break
 			}
 			case "email": {
-				todo()
+				const a = this.makeElement(node, "a", {
+					href: `mailto:${node.value}`,
+				})
+				dst.push(a)
+				break
 			}
 			case "link": {
 				const target = this.getTarget(node)
@@ -260,7 +269,8 @@ class Converter {
 				break
 			}
 			case "mark": {
-				todo()
+				dst.push(this.makeElement(node, "mark"))
+				break
 			}
 			case "superscript": {
 				dst.push(this.makeElement(node, "sup"))
@@ -492,5 +502,4 @@ function punctuation(kind: SmartPunctuationType): string {
 			return "—"
 		}
 	}
-	AstNode
 }
