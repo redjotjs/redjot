@@ -217,10 +217,20 @@ class Converter {
 				break
 			}
 			case "inlineMath": {
-				todo()
+				dst.push(
+					this.makeElement(node, "span", {
+						class: "math inline",
+					}),
+				)
+				break
 			}
 			case "displayMath": {
-				todo()
+				dst.push(
+					this.makeElement(node, "span", {
+						class: "math display",
+					}),
+				)
+				break
 			}
 			case "url": {
 				dst.push(
