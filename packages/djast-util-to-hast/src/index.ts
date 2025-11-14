@@ -1,17 +1,11 @@
 import type {
 	AstNode,
-	Block,
 	Document,
-	FootnoteReference,
-	Inline,
-	Literal,
-	Node,
-	Raw,
 	Footnote,
-	RawInline,
-	SmartPunctuationType,
 	Image,
 	Link,
+	Raw,
+	RawInline,
 } from "djast"
 import type {
 	ElementContent,
@@ -20,7 +14,6 @@ import type {
 	Text as HastText,
 	Root,
 } from "hast"
-import type { Node as UnistNode } from "unist"
 
 export function toHast(tree: Document, options: Options): Root {
 	const converter = new Converter(tree, options)
@@ -233,6 +226,7 @@ class Converter {
 			}
 			case "symbol": {
 				todo()
+				break
 			}
 			case "verbatim": {
 				dst.push(this.makeElement(node, "code"))
@@ -274,20 +268,16 @@ class Converter {
 				break
 			}
 			case "link": {
-				const target = this.getTarget(node)
 				const a = this.makeElement(node, "a", {
-					href: target,
+					href: this.getTarget(node),
 				})
 				dst.push(a)
 				break
 			}
 			case "image": {
 				// TODO: alt
-				const target = this.getTarget(node)
 				const img = makeNode(node, "img", {
-					src:
-						node.destination ??
-						"TODO: reference",
+					src: this.getTarget(node),
 				})
 				dst.push(img)
 				break
@@ -388,6 +378,7 @@ class Converter {
 			}
 			case "reference": {
 				todo()
+				break
 			}
 			case "footnote":
 			case "document": {
@@ -516,30 +507,4 @@ function todo(msg?: string): never {
 
 function unreachable(): never {
 	throw new Error("This branch must not be reached")
-}
-
-function punctuation(kind: SmartPunctuationType): string {
-	switch (kind) {
-		case "left_single_quote": {
-			return "'"
-		}
-		case "right_single_quote": {
-			return "'"
-		}
-		case "left_double_quote": {
-			return '"'
-		}
-		case "right_double_quote": {
-			return '"'
-		}
-		case "ellipses": {
-			return "..."
-		}
-		case "en_dash": {
-			return "–"
-		}
-		case "em_dash": {
-			return "—"
-		}
-	}
 }
