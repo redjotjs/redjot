@@ -14,6 +14,7 @@ import type {
 	Link,
 } from "djast"
 import type {
+	ElementContent,
 	Element as HastElement,
 	ElementContent as HastElementContent,
 	Text as HastText,
@@ -59,7 +60,8 @@ class Converter {
 	}
 
 	convert(): Root {
-		const children = this.convertNodeList(this.tree.children)
+		const children: HastElementContent[] = []
+		this.convertNodeList(this.tree.children, children)
 
 		const footnotes = this.tree.footnotes
 		if (Object.keys(footnotes).length > 0) {
@@ -67,35 +69,48 @@ class Converter {
 			children.push(endnotes)
 		}
 
-		return {
+		const root: Root = {
 			type: "root",
 			children,
 		}
+
+		return root
 	}
 
-	convertNode(node: AstNode): HastElement | HastText {
+	convertNode(node: AstNode, dst: ElementContent[]) {
 		switch (node.type) {
 			case "paragraph": {
-				return this.makeElement(node, "p")
+				dst.push(this.makeElement(node, "p"))
+				break
 			}
 			case "heading": {
-				return this.makeElement(node, `h${node.level}`)
+				dst.push(
+					this.makeElement(
+						node,
+						`h${node.level}`,
+					),
+				)
+				break
 			}
 			case "thematicBreak": {
-				return this.makeElement(node, "hr")
+				dst.push(this.makeElement(node, "hr"))
+				break
 			}
 			case "section": {
-				return this.makeElement(node, "section")
+				dst.push(this.makeElement(node, "section"))
+				break
 			}
 			case "div": {
-				return this.makeElement(node, "div")
+				dst.push(this.makeElement(node, "div"))
+				break
 			}
 			case "blockquote": {
-				return this.makeElement(node, "blockquote")
+				dst.push(this.makeElement(node, "blockquote"))
+				break
 			}
 			case "code": {
-				const out = this.makeElement(node, "pre")
-				out.children[0] = {
+				const pre = this.makeElement(node, "pre")
+				pre.children[0] = {
 					type: "element",
 					tagName: "code",
 					properties: { lang: node.lang },
@@ -106,16 +121,20 @@ class Converter {
 						},
 					],
 				}
-				return out
+				dst.push(pre)
+				break
 			}
 			case "raw": {
-				return makeRaw(node)
+				dst.push(makeRaw(node))
+				break
 			}
 			case "list": {
-				return this.makeElement(node, "ul")
+				dst.push(this.makeElement(node, "ul"))
+				break
 			}
 			case "listItem": {
-				return this.makeElement(node, "li")
+				dst.push(this.makeElement(node, "li"))
+				break
 			}
 			case "taskList": {
 				todo()
@@ -124,7 +143,8 @@ class Converter {
 				todo()
 			}
 			case "orderedList": {
-				return this.makeElement(node, "ol")
+				dst.push(this.makeElement(node, "ol"))
+				break
 			}
 			case "caption": {
 				todo()
@@ -133,11 +153,12 @@ class Converter {
 				todo()
 			}
 			case "text": {
-				return {
+				dst.push({
 					type: "text",
 					value: node.value,
 					position: node.position,
-				}
+				})
+				break
 			}
 			case "footnoteReference": {
 				const refName: HastText = {
@@ -155,22 +176,26 @@ class Converter {
 					id: `fnref:${node.value}`,
 				})
 				out.children.push(sup)
-				return out
+				dst.push(out)
+				break
 			}
 			case "smartPunctuation": {
-				return {
+				dst.push({
 					type: "text",
 					value: this.options.smartPunctuation[
 						node.kind
 					],
 					position: node.position,
-				}
+				})
+				break
 			}
 			case "softBreak": {
-				return { type: "text", value: " " }
+				dst.push({ type: "text", value: " " })
+				break
 			}
 			case "hardBreak": {
-				return this.makeElement(node, "br")
+				dst.push(this.makeElement(node, "br"))
+				break
 			}
 			case "nonBreakingSpace": {
 				todo()
@@ -179,10 +204,12 @@ class Converter {
 				todo()
 			}
 			case "verbatim": {
-				return this.makeElement(node, "code")
+				dst.push(this.makeElement(node, "code"))
+				break
 			}
 			case "rawInline": {
-				return makeRaw(node)
+				dst.push(makeRaw(node))
+				break
 			}
 			case "inlineMath": {
 				todo()
@@ -191,52 +218,65 @@ class Converter {
 				todo()
 			}
 			case "url": {
-				return this.makeElement(node, "url", {
-					href: node.value,
-				})
+				dst.push(
+					this.makeElement(node, "url", {
+						href: node.value,
+					}),
+				)
+				break
 			}
 			case "email": {
 				todo()
 			}
 			case "link": {
 				const target = this.getTarget(node)
-				console.log("target", target)
-				return this.makeElement(node, "a", {
+				const a = this.makeElement(node, "a", {
 					href: target,
 				})
+				dst.push(a)
+				break
 			}
 			case "image": {
 				// TODO: alt
 				const target = this.getTarget(node)
-				return makeNode(node, "img", {
+				const img = makeNode(node, "img", {
 					src:
 						node.destination ??
 						"TODO: reference",
 				})
+				dst.push(img)
+				break
 			}
 			case "emphasis": {
-				return this.makeElement(node, "em")
+				dst.push(this.makeElement(node, "em"))
+				break
 			}
 			case "strong": {
-				return this.makeElement(node, "strong")
+				dst.push(this.makeElement(node, "strong"))
+				break
 			}
 			case "span": {
-				return this.makeElement(node, "span")
+				dst.push(this.makeElement(node, "span"))
+				break
 			}
 			case "mark": {
 				todo()
 			}
 			case "superscript": {
-				return this.makeElement(node, "sup")
+				dst.push(this.makeElement(node, "sup"))
+				break
 			}
 			case "subscript": {
-				return this.makeElement(node, "sub")
+				dst.push(this.makeElement(node, "sub"))
+				break
 			}
 			case "delete": {
-				return this.makeElement(node, "del")
+				dst.push(this.makeElement(node, "del"))
+				break
 			}
 			case "insert": {
-				return this.makeElement(node, "ins")
+				dst.push(this.makeElement(node, "ins"))
+				break
 			}
 			case "doubleQuoted": {
 				todo()
@@ -245,9 +285,11 @@ class Converter {
 				todo()
 			}
 			case "definitionList": {
-				return this.makeElement(node, "dl")
+				dst.push(this.makeElement(node, "dl"))
+				break
 			}
 			case "definitionListItem": {
+				const [term, definition] = node.children
 				todo()
 			}
 			case "term": {
@@ -257,10 +299,12 @@ class Converter {
 				todo()
 			}
 			case "row": {
-				return this.makeElement(node, "tr")
+				dst.push(this.makeElement(node, "tr"))
+				break
 			}
 			case "cell": {
-				return this.makeElement(node, "th")
+				dst.push(this.makeElement(node, "th"))
+				break
 			}
 			case "reference": {
 				todo()
@@ -272,15 +316,10 @@ class Converter {
 		}
 	}
 
-	convertNodeList(nodes: AstNode[]): (HastElement | HastText)[] {
-		const out = []
-		for (const node of nodes) {
-			const hastNode = this.convertNode(node)
-			if (hastNode) {
-				out.push(hastNode)
-			}
+	convertNodeList(from: AstNode[], to: HastElementContent[]): void {
+		for (const node of from) {
+			this.convertNode(node, to)
 		}
-		return out
 	}
 
 	convertFootnote(footnote: Footnote): HastElement {
@@ -337,7 +376,7 @@ class Converter {
 		const out = makeNode(node, tagName, properties)
 
 		if ("children" in node) {
-			out.children = this.convertNodeList(node.children)
+			this.convertNodeList(node.children, out.children)
 		} else if ("value" in node) {
 			out.children.push({ type: "text", value: node.value })
 		}
@@ -425,4 +464,5 @@ function punctuation(kind: SmartPunctuationType): string {
 			return "—"
 		}
 	}
+	AstNode
 }
