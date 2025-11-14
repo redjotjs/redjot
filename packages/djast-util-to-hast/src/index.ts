@@ -17,7 +17,6 @@ import type {
 
 export function toHast(tree: Document, options?: Options): Root {
 	const converter = new Converter(tree, options)
-	console.log(tree)
 	return converter.convert()
 }
 
@@ -348,8 +347,6 @@ class Converter {
 			}
 			case "definitionListItem": {
 				const [term, definition] = node.children
-				console.log(term)
-				console.log(definition)
 
 				this.convertNode(term, dst)
 				this.convertNode(definition, dst)
