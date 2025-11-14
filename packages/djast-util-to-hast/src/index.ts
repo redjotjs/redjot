@@ -137,10 +137,26 @@ class Converter {
 				break
 			}
 			case "taskList": {
-				todo()
+				dst.push(this.makeElement(node, "ul"))
+				break
 			}
 			case "taskListItem": {
-				todo()
+				const checked = node.checkbox === "checked"
+				const checkmark: HastElement = {
+					type: "element",
+					tagName: "input",
+					properties: {
+						type: "checkbox",
+						disabled: true,
+						checked,
+					},
+					children: [],
+				}
+
+				const item = this.makeElement(node, "li")
+				item.children.unshift(checkmark)
+				dst.push(item)
+				break
 			}
 			case "orderedList": {
 				dst.push(this.makeElement(node, "ol"))
