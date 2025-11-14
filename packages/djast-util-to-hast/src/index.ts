@@ -15,7 +15,7 @@ import type {
 	Root,
 } from "hast"
 
-export function toHast(tree: Document, options: Options): Root {
+export function toHast(tree: Document, options?: Options): Root {
 	const converter = new Converter(tree, options)
 	console.log(tree)
 	return converter.convert()
@@ -47,7 +47,7 @@ class Converter {
 	}
 	tree: Document
 
-	constructor(tree: Document, options: Options) {
+	constructor(tree: Document, options?: Options) {
 		this.tree = tree
 		this.options = { ...this.options, ...options }
 	}
