@@ -115,7 +115,7 @@ export interface TaskList extends Parent {
 
 export interface TaskListItem extends BlockParent {
 	type: "taskListItem"
-	checked: boolean
+	checkbox: "checked" | "unchecked"
 }
 
 export interface OrderedList extends Parent {
