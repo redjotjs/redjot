@@ -3,7 +3,7 @@ import assert from "node:assert/strict"
 import rehypeStringify from "rehype-stringify"
 import { unified } from "unified"
 import redjotParse from "../../redjot-parse/src"
-import redjotRehype from "."
+import redjotRehype from "../src"
 
 const processor = unified()
 	.use(redjotParse)
