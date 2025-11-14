@@ -1,6 +1,6 @@
 {
 	"name": "djast-util-from-djot",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"author": "Andrej Kolčin <self@kaathewise.net>",
 	"description": "Convert Djot.js AST to djast",
 	"license": "MPL-2.0",
@@ -8,7 +8,9 @@
 	"type": "module",
 	"dependencies": {
 		"@djot/djot": "^0.3.2",
-		"@types/unist": "^3.0.3",
-		"djast": "^0.2.0"
+		"djast": "^0.3.0"
+	},
+	"devDependencies": {
+		"@types/unist": "^3.0.3"
 	}
 }
