@@ -125,7 +125,7 @@ class Converter {
 				break
 			}
 			case "raw": {
-				dst.push(makeRaw(node))
+				makeRaw(node, dst)
 				break
 			}
 			case "list": {
@@ -208,7 +208,7 @@ class Converter {
 				break
 			}
 			case "rawInline": {
-				dst.push(makeRaw(node))
+				makeRaw(node, dst)
 				break
 			}
 			case "inlineMath": {
@@ -279,10 +279,32 @@ class Converter {
 				break
 			}
 			case "doubleQuoted": {
-				todo()
+				dst.push({
+					type: "text",
+					value: this.options.smartPunctuation
+						.left_double_quote,
+				})
+				this.convertNodeList(node.children, dst)
+				dst.push({
+					type: "text",
+					value: this.options.smartPunctuation
+						.right_double_quote,
+				})
+				break
 			}
 			case "singleQuoted": {
-				todo()
+				dst.push({
+					type: "text",
+					value: this.options.smartPunctuation
+						.left_single_quote,
+				})
+				this.convertNodeList(node.children, dst)
+				dst.push({
+					type: "text",
+					value: this.options.smartPunctuation
+						.right_single_quote,
+				})
+				break
 			}
 			case "definitionList": {
 				dst.push(this.makeElement(node, "dl"))
@@ -290,13 +312,21 @@ class Converter {
 			}
 			case "definitionListItem": {
 				const [term, definition] = node.children
-				todo()
+				console.log(term)
+				console.log(definition)
+
+				this.convertNode(term, dst)
+				this.convertNode(definition, dst)
+
+				break
 			}
 			case "term": {
-				todo()
+				dst.push(this.makeElement(node, "dt"))
+				break
 			}
 			case "definition": {
-				todo()
+				dst.push(this.makeElement(node, "dd"))
+				break
 			}
 			case "row": {
 				dst.push(this.makeElement(node, "tr"))
@@ -414,9 +444,9 @@ function makeNode(
 	}
 }
 
-function makeRaw(node: RawInline | Raw): HastElement | HastText {
+function makeRaw(node: RawInline | Raw, dst: HastElementContent[]): void {
 	if (node.format === "html") {
-		return {
+		dst.push({
 			// Raw nodes aren't in the hast API, but they
 			// are used by `rehype-raw` and are supported
 			// by `rehype-stringify`
@@ -425,11 +455,9 @@ function makeRaw(node: RawInline | Raw): HastElement | HastText {
 			type: "raw",
 			position: node.position,
 			value: node.value,
-		}
-	} else {
-		// TODO: is there a better way to skip an element?
-		return { type: "text", value: "" }
+		})
 	}
+	// otherwise do nothing
 }
 
 function todo(msg?: string): never {
