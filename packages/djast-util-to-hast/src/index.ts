@@ -1,5 +1,6 @@
 import type {
 	AstNode,
+	Symbol as DjotSymbol,
 	Document,
 	Footnote,
 	Image,
@@ -30,6 +31,15 @@ export type Options = {
 		en_dash: string
 		em_dash: string
 	}
+	handleSymbol: (symbol: DjotSymbol) => ElementContent
+}
+
+function handleSymbol(symbol: DjotSymbol): ElementContent {
+	return {
+		type: "text",
+		value: `:${symbol.alias}:`,
+		position: symbol.position,
+	}
 }
 
 class Converter {
@@ -43,6 +53,7 @@ class Converter {
 			en_dash: "–",
 			em_dash: "—",
 		},
+		handleSymbol: handleSymbol,
 	}
 	tree: Document
 
@@ -229,7 +240,7 @@ class Converter {
 				break
 			}
 			case "symbol": {
-				todo()
+				dst.push(this.options.handleSymbol(node))
 				break
 			}
 			case "verbatim": {
@@ -515,10 +526,6 @@ function makeRaw(node: RawInline | Raw, dst: HastElementContent[]): void {
 		})
 	}
 	// otherwise do nothing
-}
-
-function todo(msg?: string): never {
-	throw new Error(`TODO: ${msg ?? "Not yet implemented"}`)
 }
 
 function unreachable(): never {
