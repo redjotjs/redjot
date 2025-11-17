@@ -15,6 +15,7 @@ import type {
 	Text as HastText,
 	Root,
 } from "hast"
+import type { Position } from "unist"
 
 export function toHast(tree: Document, options?: Options): Root {
 	const converter = new Converter(tree, options)
@@ -35,11 +36,7 @@ export type Options = {
 }
 
 function handleSymbol(symbol: DjotSymbol): ElementContent {
-	return {
-		type: "text",
-		value: `:${symbol.alias}:`,
-		position: symbol.position,
-	}
+	return makeText(`:${symbol.alias}:`, symbol.position)
 }
 
 class Converter {
@@ -117,12 +114,7 @@ class Converter {
 					type: "element",
 					tagName: "code",
 					properties: { lang: node.lang },
-					children: [
-						{
-							type: "text",
-							value: node.value,
-						},
-					],
+					children: [makeText(node.value)],
 				}
 				dst.push(pre)
 				break
@@ -182,11 +174,7 @@ class Converter {
 				break
 			}
 			case "text": {
-				dst.push({
-					type: "text",
-					value: node.value,
-					position: node.position,
-				})
+				dst.push(makeText(node.value, node.position))
 				break
 			}
 			case "footnoteReference": {
@@ -194,11 +182,8 @@ class Converter {
 					Object.keys(
 						this.tree.footnotes,
 					).indexOf(node.value) + 1
+				const refName = makeText(String(index))
 
-				const refName: HastText = {
-					type: "text",
-					value: String(index),
-				}
 				const sup: HastElement = {
 					type: "element",
 					tagName: "sup",
@@ -214,17 +199,18 @@ class Converter {
 				break
 			}
 			case "smartPunctuation": {
-				dst.push({
-					type: "text",
-					value: this.options.smartPunctuation[
-						node.kind
-					],
-					position: node.position,
-				})
+				dst.push(
+					makeText(
+						this.options.smartPunctuation[
+							node.kind
+						],
+						node.position,
+					),
+				)
 				break
 			}
 			case "softBreak": {
-				dst.push({ type: "text", value: " " })
+				dst.push(makeText(" ", node.position))
 				break
 			}
 			case "hardBreak": {
@@ -232,11 +218,7 @@ class Converter {
 				break
 			}
 			case "nonBreakingSpace": {
-				dst.push({
-					type: "text",
-					value: "\u00A0",
-					position: node.position,
-				})
+				dst.push(makeText("\u00A0", node.position))
 				break
 			}
 			case "symbol": {
@@ -330,31 +312,35 @@ class Converter {
 				break
 			}
 			case "doubleQuoted": {
-				dst.push({
-					type: "text",
-					value: this.options.smartPunctuation
-						.left_double_quote,
-				})
+				dst.push(
+					makeText(
+						this.options.smartPunctuation
+							.left_double_quote,
+					),
+				)
 				this.convertNodeList(node.children, dst)
-				dst.push({
-					type: "text",
-					value: this.options.smartPunctuation
-						.right_double_quote,
-				})
+				dst.push(
+					makeText(
+						this.options.smartPunctuation
+							.right_double_quote,
+					),
+				)
 				break
 			}
 			case "singleQuoted": {
-				dst.push({
-					type: "text",
-					value: this.options.smartPunctuation
-						.left_single_quote,
-				})
+				dst.push(
+					makeText(
+						this.options.smartPunctuation
+							.left_single_quote,
+					),
+				)
 				this.convertNodeList(node.children, dst)
-				dst.push({
-					type: "text",
-					value: this.options.smartPunctuation
-						.right_single_quote,
-				})
+				dst.push(
+					makeText(
+						this.options.smartPunctuation
+							.right_single_quote,
+					),
+				)
 				break
 			}
 			case "definitionList": {
@@ -413,7 +399,7 @@ class Converter {
 				href: `#fnref:${footnote.label}`,
 				role: "doc-backlink",
 			},
-			children: [{ type: "text", value: "↩" }],
+			children: [makeText("↩")],
 		}
 
 		const last_child = out.children.at(-1)
@@ -427,7 +413,7 @@ class Converter {
 			last_child.tagName === "p"
 		) {
 			// add a space before the backlink
-			last_child.children.push({ type: "text", value: " " })
+			last_child.children.push(makeText(" "))
 			last_child.children.push(backlink)
 		} else {
 			out.children.push(backlink)
@@ -476,7 +462,7 @@ class Converter {
 		if ("children" in node) {
 			this.convertNodeList(node.children, out.children)
 		} else if ("value" in node) {
-			out.children.push({ type: "text", value: node.value })
+			out.children.push(makeText(node.value, node.position))
 		}
 
 		return out
@@ -491,6 +477,14 @@ class Converter {
 		} else {
 			unreachable()
 		}
+	}
+}
+
+function makeText(value: string, position?: Position): HastText {
+	return {
+		type: "text",
+		value,
+		position,
 	}
 }
 
