@@ -1,12 +1,20 @@
 import type { Document, Raw } from "djast"
+import { Parent } from "djast"
 import type { Processor, Transformer } from "unified"
+import type { Node } from "unist"
 
 export default function redjotMetadata(this: Processor): Transformer {
-	// TODO: make Document directly extend Node upstream
-	return transform as unknown as Transformer
+	return transform
 }
 
-function transform(root: Document): void {
+function transform(root: Node): void {
+	if (!("children" in root)) {
+		return
+	}
+	if (!Array.isArray(root.children)) {
+		return
+	}
+
 	const index = root.children.findIndex(
 		node =>
 			node.type === "raw" &&
