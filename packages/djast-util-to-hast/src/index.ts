@@ -4,6 +4,7 @@ import type {
 	Document,
 	Footnote,
 	Image,
+	Inline,
 	Link,
 	Raw,
 	RawInline,
@@ -272,10 +273,13 @@ class Converter {
 				break
 			}
 			case "image": {
-				// TODO: alt
 				const img = makeNode(node, "img", {
 					src: this.getTarget(node),
 				})
+				const alt = stringify(node)
+				if (alt) {
+					img.properties.alt = alt
+				}
 				dst.push(img)
 				break
 			}
@@ -520,6 +524,24 @@ function makeRaw(node: RawInline | Raw, dst: HastElementContent[]): void {
 		})
 	}
 	// otherwise do nothing
+}
+
+function stringify(node: Inline): string {
+	const buffer: string[] = []
+	processStringify(node, buffer)
+	return buffer.join("")
+}
+
+function processStringify(node: Inline, buffer: string[]): void {
+	if ("value" in node) {
+		buffer.push(node.value)
+	} else if (node.type === "softBreak" || node.type === "hardBreak") {
+		buffer.push("\n")
+	} else if ("children" in node) {
+		for (const child of node.children) {
+			processStringify(child, buffer)
+		}
+	}
 }
 
 function unreachable(): never {
