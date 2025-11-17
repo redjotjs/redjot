@@ -74,7 +74,7 @@ function convertType(tag: string): string {
 		case "non_breaking_space":
 			return "nonBreakingSpace"
 		case "symb":
-			return "symb"
+			return "symbol"
 		case "verbatim":
 			return "verbatim"
 		case "raw_inline":
