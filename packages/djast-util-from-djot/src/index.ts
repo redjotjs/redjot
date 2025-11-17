@@ -29,7 +29,7 @@ function posDjotToUnist(pos: djot.Pos | undefined): Position | undefined {
 
 const IGNORE = ["type", "tag", "children", "pos", "text"]
 
-function convertType(tag: string): string {
+function convertType(tag: djot.AstNode["tag"]): AstNode["type"] {
 	switch (tag) {
 		case "para":
 			return "paragraph"
@@ -135,8 +135,8 @@ function convertType(tag: string): string {
 }
 
 export function fromDjotAstNode(node: djot.AstNode): AstNode {
+	// @ts-expect-error
 	const out: AstNode = {
-		// @ts-expect-error
 		type: convertType(node.tag),
 		attributes: node.attributes,
 		autoAttributes: node.autoAttributes,
