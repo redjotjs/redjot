@@ -233,7 +233,7 @@ export interface Link extends InlineParent {
 	reference?: string
 }
 
-export interface Image extends Parent {
+export interface Image extends InlineParent {
 	type: "image"
 	destination?: string
 	reference?: string
