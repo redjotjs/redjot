@@ -179,9 +179,14 @@ class Converter {
 				break
 			}
 			case "footnoteReference": {
+				const index =
+					Object.keys(
+						this.tree.footnotes,
+					).indexOf(node.value) + 1
+
 				const refName: HastText = {
 					type: "text",
-					value: node.value,
+					value: String(index),
 				}
 				const sup: HastElement = {
 					type: "element",
@@ -402,7 +407,24 @@ class Converter {
 			},
 			children: [{ type: "text", value: "↩" }],
 		}
-		out.children.push(backlink)
+
+		const last_child = out.children.at(-1)
+		if (!last_child) {
+			return out
+		}
+
+		// put the backlink into the last paragraph if there is one
+		if (
+			last_child.type === "element" &&
+			last_child.tagName === "p"
+		) {
+			// add a space before the backlink
+			last_child.children.push({ type: "text", value: " " })
+			last_child.children.push(backlink)
+		} else {
+			out.children.push(backlink)
+		}
+
 		return out
 	}
 
