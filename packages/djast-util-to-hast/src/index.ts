@@ -378,10 +378,7 @@ class Converter {
 				)
 				break
 			}
-			case "reference": {
-				todo()
-				break
-			}
+			case "reference":
 			case "footnote":
 			case "document": {
 				unreachable()
