@@ -1,5 +1,4 @@
-import type { Document, Raw } from "djast"
-import { Parent } from "djast"
+import type { Raw } from "djast"
 import type { Processor, Transformer } from "unified"
 import type { Node } from "unist"
 
