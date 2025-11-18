@@ -1,14 +1,14 @@
 {
 	"name": "redjot-parse",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"author": "Andrej Kolčin <self@kaathewise.net>",
 	"description": "redjot plugin for parsing Djot input",
 	"license": "MPL-2.0",
 	"exports": "./src/index.ts",
 	"type": "module",
 	"dependencies": {
-		"djast": "^0.3.0",
-		"djast-util-from-djot": "^0.3.0"
+		"djast": "^0.4.0",
+		"djast-util-from-djot": "^0.4.0"
 	},
 	"devDependencies": {
 		"unified": "^11.0.5"
