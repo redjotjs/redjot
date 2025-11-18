@@ -1,6 +1,6 @@
 {
 	"name": "djast-util-to-hast",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"author": "Andrej Kolčin <self@kaathewise.net>",
 	"description": "Convert djast to hast",
 	"license": "MPL-2.0",
