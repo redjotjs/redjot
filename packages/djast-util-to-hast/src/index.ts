@@ -194,6 +194,7 @@ class Converter {
 				const out = makeNode(node, "a", {
 					href: `#fn:${node.value}`,
 					id: `fnref:${node.value}`,
+					role: "doc-noteref",
 				})
 				out.children.push(sup)
 				dst.push(out)
