@@ -383,7 +383,9 @@ class Converter {
 			case "reference":
 			case "footnote":
 			case "document": {
-				unreachable()
+				unreachable(
+					`${node.type} must not be passed to convertNode`,
+				)
 			}
 		}
 	}
@@ -478,6 +480,13 @@ class Converter {
 			return node.destination
 		} else if (node.reference) {
 			const ref = this.tree.references[node.reference]
+
+			if (!ref) {
+				unreachable(
+					"A defined reference must be present in root's references",
+				)
+			}
+
 			return ref.destination
 		} else {
 			unreachable()
@@ -545,6 +554,6 @@ function processStringify(node: Inline, buffer: string[]): void {
 	}
 }
 
-function unreachable(): never {
-	throw new Error("This branch must not be reached")
+function unreachable(message?: string): never {
+	throw new Error(message)
 }
