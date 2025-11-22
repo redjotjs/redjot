@@ -36,7 +36,7 @@ Which will print `<p>Hello from <sup>D</sup>j<sub>o</sub>t</p>` or
 This monorepo contains the low-level `djast` packages, which operate on
 the unified-compatible Djot AST:
 
-- [`djast`](packages/djast/): AST definition
+- [`djast`](packages/djast): AST definition
 - [`djast-util-from-djot`](packages/djast-util-from-djot): Djot parser
 - [`djast-util-to-hast`](packages/djast-util-to-hast): Conversion from
   djast to hast

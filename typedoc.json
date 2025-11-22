@@ -1,0 +1,9 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPointStrategy": "packages",
+	"entryPoints": ["packages/*"],
+	"packageOptions": {
+		"entryPoints": ["src/index.ts"]
+	},
+	"out": "target/docs/"
+}

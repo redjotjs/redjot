@@ -14,11 +14,13 @@
 	],
 	"scripts": {
 		"check": "biome check && tsc --noEmit",
-		"lint": "biome check --fix --unsafe"
+		"lint": "biome check --fix --unsafe",
+		"doc": "typedoc"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.0",
 		"rehype-stringify": "^10.0.1",
+		"typedoc": "^0.28.14",
 		"typescript": "^5.9.2",
 		"typescript-language-server": "^4.4.0"
 	}
