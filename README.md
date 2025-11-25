@@ -10,16 +10,12 @@ import { unified } from "unified"
 import redjotParse from "redjot-parse"
 import redjotRehype from "redjot-rehype"
 import rehypeStringify from "rehype-stringify"
-import rehypeRaw from "rehype-raw"
 
 const djot = `Hello from ^D^j~o~t`
 
 const processor = unified()
 	.use(redjotParse)
-	.use(redjotRehype, {
-		allowDangerousHtml: true,
-	})
-	.use(rehypeRaw)
+	.use(redjotRehype)
 	.use(rehypeStringify)
 
 const html = await processor.process(djot)

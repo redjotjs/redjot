@@ -164,7 +164,7 @@ export interface Code extends Literal {
 	/**
 	 * Language identifier.  It can be written with whitespace in the
 	 * document (```` ``` ruby ````), in which case the string will be
-	 * trimmed (so, `lang` will have a value or `ruby` in this example).
+	 * trimmed (so, `lang` will have a value of `ruby` in this example).
 	 */
 	lang?: string
 }
