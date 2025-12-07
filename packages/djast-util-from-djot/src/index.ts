@@ -3,8 +3,10 @@ import type {
 	AstNode,
 	Block,
 	Document,
+	Footnote,
 	Literal,
 	Parent,
+	Reference,
 	SmartPunctuation,
 } from "djast"
 import type { Position } from "unist"
@@ -166,16 +168,15 @@ export function fromDjotAstNode(node: djot.AstNode): AstNode {
 	return out
 }
 
-// Returns any because it's easier to do that setting up Djot to redjot type
-// mappings.
-export function convertRecord(
-	record: Record<string, djot.AstNode>,
-	// biome-ignore lint/suspicious/noExplicitAny: see above
-): Record<string, any> {
+export function convertRecord<T extends djot.Footnote | djot.Reference>(
+	record: Record<string, T>,
+): Record<string, T extends djot.Footnote ? Footnote : Reference> {
 	return Object.fromEntries(
 		Object.entries(record).map(([key, value]) => [
 			key,
-			fromDjotAstNode(value),
+			fromDjotAstNode(value) as T extends djot.Footnote
+				? Footnote
+				: Reference,
 		]),
 	)
 }
