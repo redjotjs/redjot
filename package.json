@@ -13,9 +13,11 @@
 		"packages/redjot-rehype/"
 	],
 	"scripts": {
-		"check": "biome check && tsc --noEmit",
+		"check": "biome check && tsc --build --clean",
+		"build": "tsc --build",
 		"lint": "biome check --fix --unsafe",
-		"doc": "typedoc"
+		"doc": "typedoc",
+		"clean": "rm -rf packages/**/dist packages/**/tsconfig.tsbuildinfo tsconfig.tsbuildinfo target/"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.0",

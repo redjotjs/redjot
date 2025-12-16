@@ -1,16 +1,10 @@
 {
-	"compilerOptions": {
-		"target": "ESNext",
-		"module": "ESNext",
-		"strict": true,
-		"skipLibCheck": true,
-		"moduleResolution": "bundler",
-
-		"noFallthroughCasesInSwitch": true,
-		"noUncheckedIndexedAccess": true,
-		"noImplicitOverride": true,
-
-		"allowSyntheticDefaultImports": true
-	},
-	"include": ["packages/*/src/**/*.ts"]
+	"references": [
+		{ "path": "packages/djast" },
+		{ "path": "packages/djast-util-from-djot/" },
+		{ "path": "packages/djast-util-to-hast/" },
+		{ "path": "packages/redjot-metadata/" },
+		{ "path": "packages/redjot-parse/" },
+		{ "path": "packages/redjot-rehype/" }
+	]
 }

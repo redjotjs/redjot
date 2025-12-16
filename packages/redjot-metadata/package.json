@@ -5,7 +5,17 @@
 	"description": "redjot plugin for extracting and converting metadata",
 	"license": "MPL-2.0",
 	"type": "module",
-	"exports": "./src/index.ts",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist/"
+	],
 	"dependencies": {
 		"djast": "^0.4.0"
 	},
