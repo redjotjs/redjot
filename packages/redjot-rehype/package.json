@@ -1,6 +1,6 @@
 {
 	"name": "redjot-rehype",
-	"version": "0.4.0",
+	"version": "0.5.0",
 	"author": "Andrej Kolčin <self@kaathewise.net>",
 	"description": "Convert Djot to HTML",
 	"license": "MPL-2.0",
@@ -16,9 +16,14 @@
 	"files": [
 		"dist/"
 	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/redjotjs/redjot.git",
+		"directory": "packages/redjot-rehype"
+	},
 	"dependencies": {
-		"djast": "^0.4.0",
-		"djast-util-to-hast": "^0.4.0"
+		"djast": "^0.5.0",
+		"djast-util-to-hast": "^0.5.0"
 	},
 	"devDependencies": {
 		"@types/hast": "^3.0.4",

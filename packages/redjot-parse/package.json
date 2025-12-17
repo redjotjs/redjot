@@ -1,6 +1,6 @@
 {
 	"name": "redjot-parse",
-	"version": "0.4.0",
+	"version": "0.5.0",
 	"author": "Andrej Kolčin <self@kaathewise.net>",
 	"description": "redjot plugin for parsing Djot input",
 	"license": "MPL-2.0",
@@ -16,9 +16,14 @@
 	"files": [
 		"dist/"
 	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/redjotjs/redjot.git",
+		"directory": "packages/redjot-parse"
+	},
 	"dependencies": {
-		"djast": "^0.4.0",
-		"djast-util-from-djot": "^0.4.0"
+		"djast": "^0.5.0",
+		"djast-util-from-djot": "^0.5.0"
 	},
 	"devDependencies": {
 		"unified": "^11.0.5"

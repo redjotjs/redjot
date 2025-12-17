@@ -1,6 +1,6 @@
 {
 	"name": "redjot-metadata",
-	"version": "0.4.1",
+	"version": "0.5.0",
 	"author": "Andrej Kolčin <self@kaathewise.net>",
 	"description": "redjot plugin for extracting and converting metadata",
 	"license": "MPL-2.0",
@@ -16,8 +16,13 @@
 	"files": [
 		"dist/"
 	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/redjotjs/redjot.git",
+		"directory": "packages/redjot-metadata"
+	},
 	"dependencies": {
-		"djast": "^0.4.0"
+		"djast": "^0.5.0"
 	},
 	"devDependencies": {
 		"unified": "^11.0.5"
