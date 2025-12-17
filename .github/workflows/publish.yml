@@ -1,0 +1,33 @@
+name: Publish packages
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "latest"
+          registry-url: "https://registry.npmjs.org"
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun ci
+      - run: bun run build
+
+      - name: publish packages
+        run: |
+          for pkgdir in packages/*; do
+            echo "dir $pkgdir"
+            (cd "$pkgdir" && npm publish --verbose --access public)
+          done
