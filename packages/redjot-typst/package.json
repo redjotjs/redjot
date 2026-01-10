@@ -1,0 +1,32 @@
+{
+	"name": "redjot-typst",
+	"version": "0.5.0",
+	"author": "Andrej Kolčin <self@kaathewise.net>",
+	"description": "redjot plugin for converting math to SVG images",
+	"license": "MPL-2.0",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist/"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/redjotjs/redjot.git",
+		"directory": "packages/redjot-typst"
+	},
+	"dependencies": {
+		"djast": "^0.5.0",
+		"unist-util-visit": "^5.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^24.10.4",
+		"unified": "^11.0.5"
+	}
+}

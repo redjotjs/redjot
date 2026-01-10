@@ -10,7 +10,8 @@
 		"packages/djast-util-to-hast/",
 		"packages/redjot-metadata/",
 		"packages/redjot-parse/",
-		"packages/redjot-rehype/"
+		"packages/redjot-rehype/",
+		"packages/redjot-typst"
 	],
 	"scripts": {
 		"check": "biome check && tsc --build --clean",

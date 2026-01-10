@@ -5,6 +5,7 @@
 		{ "path": "packages/djast-util-to-hast/" },
 		{ "path": "packages/redjot-metadata/" },
 		{ "path": "packages/redjot-parse/" },
-		{ "path": "packages/redjot-rehype/" }
+		{ "path": "packages/redjot-rehype/" },
+		{ "path": "packages/redjot-typst/" }
 	]
 }
