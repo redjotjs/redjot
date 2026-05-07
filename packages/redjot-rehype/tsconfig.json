@@ -6,5 +6,8 @@
 		"rootDir": "src",
 		"outDir": "dist"
 	},
-	"references": [{ "path": "../djast" }]
+	"references": [
+		{ "path": "../djast" },
+		{ "path": "../djast-util-to-hast" }
+	]
 }

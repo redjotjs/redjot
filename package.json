@@ -14,7 +14,7 @@
 		"packages/redjot-typst"
 	],
 	"scripts": {
-		"check": "biome check && tsc --build --clean",
+		"check": "biome check && tsc --build",
 		"build": "tsc --build",
 		"lint": "biome check --fix --unsafe",
 		"doc": "typedoc",

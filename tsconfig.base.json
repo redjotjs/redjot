@@ -1,18 +1,27 @@
 {
 	"compilerOptions": {
-		"target": "ESNext",
-		"module": "ESNext",
+		// Type checking
 		"strict": true,
-		"skipLibCheck": true,
-		"moduleResolution": "bundler",
-
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedIndexedAccess": true,
 		"noImplicitOverride": true,
 
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
+		// Modules
+		"module": "esnext",
+		"moduleResolution": "bundler", // don't requrie extensions
 
-		"composite": true
+		// Interop constraints
+		"erasableSyntaxOnly": true,
+		"isolatedDeclarations": true,
+		"isolatedModules": true,
+
+		// Language and environment
+		"target": "esnext",
+
+		// Projects
+		"composite": true,
+
+		// Completeness
+		"skipLibCheck": true
 	}
 }
