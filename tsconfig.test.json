@@ -1,0 +1,17 @@
+{
+	"extends": "./tsconfig.base.json",
+	"include": ["tests"],
+	"compilerOptions": {
+		"rootDir": "tests",
+		"outDir": "test-dist"
+	},
+	"references": [
+		{ "path": "packages/djast" },
+		{ "path": "packages/djast-util-from-djot" },
+		{ "path": "packages/djast-util-to-hast" },
+		{ "path": "packages/redjot-metadata" },
+		{ "path": "packages/redjot-parse" },
+		{ "path": "packages/redjot-rehype" },
+		{ "path": "packages/redjot-typst" }
+	]
+}

@@ -14,11 +14,12 @@
 		"packages/redjot-typst"
 	],
 	"scripts": {
-		"check": "biome check && tsc --build",
+		"check": "biome check && tsc --build && npm run test",
 		"build": "tsc --build",
 		"lint": "biome check --fix --unsafe",
 		"doc": "typedoc",
-		"clean": "rm -rf packages/**/dist packages/**/tsconfig.tsbuildinfo tsconfig.tsbuildinfo target/"
+		"test": "tsc --build tsconfig.test.json && node --test 'test-dist/**/*.test.js'",
+		"clean": "rm -rf packages/**/dist packages/**/tsconfig.tsbuildinfo test-dist/ tsconfig.tsbuildinfo target/"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.0",

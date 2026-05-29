@@ -1,4 +1,5 @@
 {
+	"files": [],
 	"references": [
 		{ "path": "packages/djast" },
 		{ "path": "packages/djast-util-from-djot/" },

@@ -20,6 +20,11 @@ function transform(root: Node): void {
 			node.format.startsWith("metadata"),
 	)
 
+	// no top-level metadata block
+	if (index === -1) {
+		return
+	}
+
 	const node = root.children[index] as Raw
 	const format = node.format
 	const rawMetadata = node.value
