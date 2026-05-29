@@ -1,32 +1,32 @@
-import { describe, it } from "node:test"
 import assert from "node:assert/strict"
-import { toHast } from "djast-util-to-hast"
-import type { Element, Text as HastText, RootContent } from "hast"
+import { describe, it } from "node:test"
 import type {
-	Document,
-	Paragraph,
-	Heading,
 	Code,
-	Text,
-	Link,
-	Image,
-	List,
-	OrderedList,
-	Verbatim,
-	Raw,
+	DisplayMath,
+	Document,
+	DoubleQuoted,
 	Footnote,
 	FootnoteReference,
-	RawInline,
+	Heading,
+	Image,
 	InlineMath,
-	DisplayMath,
-	Url,
+	Link,
+	List,
 	NonBreakingSpace,
-	Symbol as SymbolNode,
-	Span,
-	DoubleQuoted,
+	OrderedList,
+	Paragraph,
+	Raw,
+	RawInline,
 	SingleQuoted,
 	SmartPunctuation,
+	Span,
+	Symbol as SymbolNode,
+	Text,
+	Url,
+	Verbatim,
 } from "djast"
+import { toHast } from "djast-util-to-hast"
+import type { Element, Text as HastText, RootContent } from "hast"
 
 function el(content: RootContent): asserts content is Element {
 	assert.equal(content.type, "element")
@@ -79,7 +79,9 @@ describe("toHast", () => {
 
 	it("converts headings to h1-h6", () => {
 		for (let level = 1; level <= 6; level++) {
-			const hast = toHast(makeDoc(makeHeading(level, "Title")))
+			const hast = toHast(
+				makeDoc(makeHeading(level, "Title")),
+			)
 			const h = hast.children[0]!
 			el(h)
 			assert.equal(h.tagName, `h${level}`)
@@ -97,7 +99,10 @@ describe("toHast", () => {
 		const hast = toHast(
 			makeDoc({
 				type: "section",
-				children: [makeHeading(1, "Title"), makePara("Text")],
+				children: [
+					makeHeading(1, "Title"),
+					makePara("Text"),
+				],
 			}),
 		)
 		const section = hast.children[0]!
@@ -117,7 +122,10 @@ describe("toHast", () => {
 
 	it("converts a blockquote", () => {
 		const hast = toHast(
-			makeDoc({ type: "blockquote", children: [makePara("Quoted")] }),
+			makeDoc({
+				type: "blockquote",
+				children: [makePara("Quoted")],
+			}),
 		)
 		const bq = hast.children[0]!
 		el(bq)
@@ -125,7 +133,11 @@ describe("toHast", () => {
 	})
 
 	it("converts a code block to pre > code", () => {
-		const code: Code = { type: "code", value: "console.log('hi')", lang: "js" }
+		const code: Code = {
+			type: "code",
+			value: "console.log('hi')",
+			lang: "js",
+		}
 		const hast = toHast(makeDoc(code))
 		const pre = hast.children[0]!
 		el(pre)
@@ -144,8 +156,14 @@ describe("toHast", () => {
 			tight: true,
 			style: "-",
 			children: [
-				{ type: "listItem", children: [makePara("one")] },
-				{ type: "listItem", children: [makePara("two")] },
+				{
+					type: "listItem",
+					children: [makePara("one")],
+				},
+				{
+					type: "listItem",
+					children: [makePara("two")],
+				},
 			],
 		}
 		const hast = toHast(makeDoc(list))
@@ -163,7 +181,12 @@ describe("toHast", () => {
 			type: "orderedList",
 			style: "1.",
 			tight: true,
-			children: [{ type: "listItem", children: [makePara("first")] }],
+			children: [
+				{
+					type: "listItem",
+					children: [makePara("first")],
+				},
+			],
 		}
 		const hast = toHast(makeDoc(ol))
 		const el_ = hast.children[0]!
@@ -175,7 +198,17 @@ describe("toHast", () => {
 		const hast = toHast(
 			makeDoc({
 				type: "paragraph",
-				children: [{ type: "emphasis", children: [{ type: "text", value: "em" }] }],
+				children: [
+					{
+						type: "emphasis",
+						children: [
+							{
+								type: "text",
+								value: "em",
+							},
+						],
+					},
+				],
 			}),
 		)
 		const p = hast.children[0]!
@@ -190,7 +223,17 @@ describe("toHast", () => {
 		const hast = toHast(
 			makeDoc({
 				type: "paragraph",
-				children: [{ type: "strong", children: [{ type: "text", value: "strong" }] }],
+				children: [
+					{
+						type: "strong",
+						children: [
+							{
+								type: "text",
+								value: "strong",
+							},
+						],
+					},
+				],
 			}),
 		)
 		const p = hast.children[0]!
@@ -206,7 +249,9 @@ describe("toHast", () => {
 			destination: "https://example.com",
 			children: [{ type: "text", value: "click" }],
 		}
-		const hast = toHast(makeDoc({ type: "paragraph", children: [link] }))
+		const hast = toHast(
+			makeDoc({ type: "paragraph", children: [link] }),
+		)
 		const p = hast.children[0]!
 		el(p)
 		const a = p.children[0]!
@@ -221,13 +266,18 @@ describe("toHast", () => {
 			destination: "https://example.com/img.png",
 			children: [{ type: "text", value: "alt text" }],
 		}
-		const hast = toHast(makeDoc({ type: "paragraph", children: [img] }))
+		const hast = toHast(
+			makeDoc({ type: "paragraph", children: [img] }),
+		)
 		const p = hast.children[0]!
 		el(p)
 		const imgEl = p.children[0]!
 		el(imgEl)
 		assert.equal(imgEl.tagName, "img")
-		assert.equal(imgEl.properties?.src, "https://example.com/img.png")
+		assert.equal(
+			imgEl.properties?.src,
+			"https://example.com/img.png",
+		)
 		assert.equal(imgEl.properties?.alt, "alt text")
 	})
 
@@ -260,9 +310,16 @@ describe("toHast", () => {
 	})
 
 	it("converts raw html block", () => {
-		const raw: Raw = { type: "raw", value: "<div>hello</div>", format: "html" }
+		const raw: Raw = {
+			type: "raw",
+			value: "<div>hello</div>",
+			format: "html",
+		}
 		const hast = toHast(makeDoc(raw))
-		const node = hast.children[0]! as { type: string; value: string }
+		const node = hast.children[0]! as {
+			type: string
+			value: string
+		}
 		assert.equal(node.type, "raw")
 		assert.equal(node.value, "<div>hello</div>")
 	})
@@ -288,9 +345,18 @@ describe("toHast", () => {
 				{
 					type: "paragraph",
 					children: [
-						{ type: "text", value: "Text" } as Text,
-						{ type: "footnoteReference", value: "note" } as FootnoteReference,
-						{ type: "text", value: " more" } as Text,
+						{
+							type: "text",
+							value: "Text",
+						} as Text,
+						{
+							type: "footnoteReference",
+							value: "note",
+						} as FootnoteReference,
+						{
+							type: "text",
+							value: " more",
+						} as Text,
 					],
 				},
 			],
@@ -346,7 +412,13 @@ describe("toHast", () => {
 		const hast = toHast(
 			makeDoc({
 				type: "paragraph",
-				children: [{ type: "smartPunctuation", kind: "em_dash", value: "" }],
+				children: [
+					{
+						type: "smartPunctuation",
+						kind: "em_dash",
+						value: "",
+					},
+				],
 			}),
 		)
 		const p = hast.children[0]!
@@ -376,7 +448,10 @@ describe("toHast", () => {
 
 	it("converts a hard break to br", () => {
 		const hast = toHast(
-			makeDoc({ type: "paragraph", children: [{ type: "hardBreak" }] }),
+			makeDoc({
+				type: "paragraph",
+				children: [{ type: "hardBreak" }],
+			}),
 		)
 		const p = hast.children[0]!
 		el(p)
@@ -389,7 +464,17 @@ describe("toHast", () => {
 		const hast = toHast(
 			makeDoc({
 				type: "paragraph",
-				children: [{ type: "superscript", children: [{ type: "text", value: "2" }] }],
+				children: [
+					{
+						type: "superscript",
+						children: [
+							{
+								type: "text",
+								value: "2",
+							},
+						],
+					},
+				],
 			}),
 		)
 		const p = hast.children[0]!
@@ -403,7 +488,17 @@ describe("toHast", () => {
 		const hast = toHast(
 			makeDoc({
 				type: "paragraph",
-				children: [{ type: "subscript", children: [{ type: "text", value: "2" }] }],
+				children: [
+					{
+						type: "subscript",
+						children: [
+							{
+								type: "text",
+								value: "2",
+							},
+						],
+					},
+				],
 			}),
 		)
 		const p = hast.children[0]!
@@ -417,7 +512,17 @@ describe("toHast", () => {
 		const hast = toHast(
 			makeDoc({
 				type: "paragraph",
-				children: [{ type: "mark", children: [{ type: "text", value: "marked" }] }],
+				children: [
+					{
+						type: "mark",
+						children: [
+							{
+								type: "text",
+								value: "marked",
+							},
+						],
+					},
+				],
 			}),
 		)
 		const p = hast.children[0]!
@@ -431,7 +536,17 @@ describe("toHast", () => {
 		const hast = toHast(
 			makeDoc({
 				type: "paragraph",
-				children: [{ type: "delete", children: [{ type: "text", value: "deleted" }] }],
+				children: [
+					{
+						type: "delete",
+						children: [
+							{
+								type: "text",
+								value: "deleted",
+							},
+						],
+					},
+				],
 			}),
 		)
 		const p = hast.children[0]!
@@ -445,7 +560,17 @@ describe("toHast", () => {
 		const hast = toHast(
 			makeDoc({
 				type: "paragraph",
-				children: [{ type: "insert", children: [{ type: "text", value: "inserted" }] }],
+				children: [
+					{
+						type: "insert",
+						children: [
+							{
+								type: "text",
+								value: "inserted",
+							},
+						],
+					},
+				],
 			}),
 		)
 		const p = hast.children[0]!
@@ -478,8 +603,23 @@ describe("toHast", () => {
 					{
 						type: "definitionListItem",
 						children: [
-							{ type: "term", children: [{ type: "text", value: "word" }] },
-							{ type: "definition", children: [makePara("explanation")] },
+							{
+								type: "term",
+								children: [
+									{
+										type: "text",
+										value: "word",
+									},
+								],
+							},
+							{
+								type: "definition",
+								children: [
+									makePara(
+										"explanation",
+									),
+								],
+							},
 						],
 					},
 				],
@@ -501,7 +641,15 @@ describe("toHast", () => {
 			makeDoc({
 				type: "table",
 				children: [
-					{ type: "caption", children: [{ type: "text", value: "" }] },
+					{
+						type: "caption",
+						children: [
+							{
+								type: "text",
+								value: "",
+							},
+						],
+					},
 					{
 						type: "row",
 						head: true,
@@ -510,7 +658,12 @@ describe("toHast", () => {
 								type: "cell",
 								head: true,
 								align: "center",
-								children: [{ type: "text", value: "Header" }],
+								children: [
+									{
+										type: "text",
+										value: "Header",
+									},
+								],
 							},
 						],
 					},
@@ -571,7 +724,9 @@ describe("toHast", () => {
 					type: "paragraph",
 					children: [
 						{ type: "text", value: "a" },
-						{ type: "nonBreakingSpace" } as NonBreakingSpace,
+						{
+							type: "nonBreakingSpace",
+						} as NonBreakingSpace,
 						{ type: "text", value: "b" },
 					],
 				}),
@@ -585,7 +740,11 @@ describe("toHast", () => {
 		})
 
 		it("converts a symbol", () => {
-			const sym: SymbolNode = { type: "symbol", alias: "smile", value: "smile" }
+			const sym: SymbolNode = {
+				type: "symbol",
+				alias: "smile",
+				value: "smile",
+			}
 			const hast = toHast(
 				makeDoc({ type: "paragraph", children: [sym] }),
 			)
@@ -597,7 +756,10 @@ describe("toHast", () => {
 		})
 
 		it("converts a URL autolink", () => {
-			const url: Url = { type: "url", value: "https://example.com" }
+			const url: Url = {
+				type: "url",
+				value: "https://example.com",
+			}
 			const hast = toHast(
 				makeDoc({ type: "paragraph", children: [url] }),
 			)
@@ -606,13 +768,22 @@ describe("toHast", () => {
 			const el_ = p.children[0]!
 			el(el_)
 			assert.equal(el_.tagName, "url")
-			assert.equal(el_.properties?.href, "https://example.com")
+			assert.equal(
+				el_.properties?.href,
+				"https://example.com",
+			)
 		})
 
 		it("converts inline math", () => {
-			const math: InlineMath = { type: "inlineMath", value: "x^2" }
+			const math: InlineMath = {
+				type: "inlineMath",
+				value: "x^2",
+			}
 			const hast = toHast(
-				makeDoc({ type: "paragraph", children: [math] }),
+				makeDoc({
+					type: "paragraph",
+					children: [math],
+				}),
 			)
 			const p = hast.children[0]!
 			el(p)
@@ -623,9 +794,15 @@ describe("toHast", () => {
 		})
 
 		it("converts display math", () => {
-			const math: DisplayMath = { type: "displayMath", value: "x^n + y^n" }
+			const math: DisplayMath = {
+				type: "displayMath",
+				value: "x^n + y^n",
+			}
 			const hast = toHast(
-				makeDoc({ type: "paragraph", children: [math] }),
+				makeDoc({
+					type: "paragraph",
+					children: [math],
+				}),
 			)
 			const p = hast.children[0]!
 			el(p)
@@ -642,7 +819,10 @@ describe("toHast", () => {
 				attributes: { class: "big" },
 			}
 			const hast = toHast(
-				makeDoc({ type: "paragraph", children: [span] }),
+				makeDoc({
+					type: "paragraph",
+					children: [span],
+				}),
 			)
 			const p = hast.children[0]!
 			el(p)
@@ -697,7 +877,11 @@ describe("toHast", () => {
 		})
 
 		it("converts ellipses smart punctuation", () => {
-			const sp: SmartPunctuation = { type: "smartPunctuation", kind: "ellipses", value: "..." }
+			const sp: SmartPunctuation = {
+				type: "smartPunctuation",
+				kind: "ellipses",
+				value: "...",
+			}
 			const hast = toHast(
 				makeDoc({ type: "paragraph", children: [sp] }),
 			)
@@ -709,7 +893,11 @@ describe("toHast", () => {
 		})
 
 		it("converts en-dash smart punctuation", () => {
-			const sp: SmartPunctuation = { type: "smartPunctuation", kind: "en_dash", value: "--" }
+			const sp: SmartPunctuation = {
+				type: "smartPunctuation",
+				kind: "en_dash",
+				value: "--",
+			}
 			const hast = toHast(
 				makeDoc({ type: "paragraph", children: [sp] }),
 			)
@@ -721,7 +909,11 @@ describe("toHast", () => {
 		})
 
 		it("converts left single quote smart punctuation", () => {
-			const sp: SmartPunctuation = { type: "smartPunctuation", kind: "left_single_quote", value: "'" }
+			const sp: SmartPunctuation = {
+				type: "smartPunctuation",
+				kind: "left_single_quote",
+				value: "'",
+			}
 			const hast = toHast(
 				makeDoc({ type: "paragraph", children: [sp] }),
 			)
@@ -752,8 +944,14 @@ describe("toHast", () => {
 				tight: false,
 				style: "-",
 				children: [
-					{ type: "listItem", children: [makePara("one")] },
-					{ type: "listItem", children: [makePara("two")] },
+					{
+						type: "listItem",
+						children: [makePara("one")],
+					},
+					{
+						type: "listItem",
+						children: [makePara("two")],
+					},
 				],
 			}
 			const hast = toHast(makeDoc(list))
@@ -763,7 +961,7 @@ describe("toHast", () => {
 			const li = ul.children[0]!
 			el(li)
 			assert.equal(li.tagName, "li")
-			assert.equal(li.children[0]!.type, "element")
+			assert.equal(li.children[0]?.type, "element")
 			const p = li.children[0]! as Element
 			assert.equal(p.tagName, "p")
 		})
@@ -776,7 +974,15 @@ describe("toHast", () => {
 						makeHeading(1, "First"),
 						{
 							type: "section",
-							children: [makeHeading(2, "Second"), makePara("Text")],
+							children: [
+								makeHeading(
+									2,
+									"Second",
+								),
+								makePara(
+									"Text",
+								),
+							],
 						},
 					],
 				}),
@@ -797,7 +1003,10 @@ describe("toHast", () => {
 				format: "latex",
 			}
 			const hast = toHast(
-				makeDoc({ type: "paragraph", children: [rawInline] }),
+				makeDoc({
+					type: "paragraph",
+					children: [rawInline],
+				}),
 			)
 			const p = hast.children[0]!
 			el(p)
@@ -810,7 +1019,12 @@ describe("toHast", () => {
 				style: "1.",
 				tight: true,
 				start: 5,
-				children: [{ type: "listItem", children: [makePara("fifth")] }],
+				children: [
+					{
+						type: "listItem",
+						children: [makePara("fifth")],
+					},
+				],
 			}
 			const hast = toHast(makeDoc(ol))
 			const olEl = hast.children[0]!
@@ -837,7 +1051,9 @@ describe("toHast", () => {
 				},
 				autoReferences: {},
 				footnotes: {},
-				children: [{ type: "paragraph", children: [img] }],
+				children: [
+					{ type: "paragraph", children: [img] },
+				],
 			}
 			const hast = toHast(doc)
 			const p = hast.children[0]!
@@ -853,7 +1069,15 @@ describe("toHast", () => {
 				makeDoc({
 					type: "table",
 					children: [
-						{ type: "caption", children: [{ type: "text", value: "" }] },
+						{
+							type: "caption",
+							children: [
+								{
+									type: "text",
+									value: "",
+								},
+							],
+						},
 						{
 							type: "row",
 							head: true,
@@ -862,13 +1086,23 @@ describe("toHast", () => {
 									type: "cell",
 									head: true,
 									align: "left",
-									children: [{ type: "text", value: "A" }],
+									children: [
+										{
+											type: "text",
+											value: "A",
+										},
+									],
 								},
 								{
 									type: "cell",
 									head: true,
 									align: "right",
-									children: [{ type: "text", value: "B" }],
+									children: [
+										{
+											type: "text",
+											value: "B",
+										},
+									],
 								},
 							],
 						},
@@ -880,13 +1114,23 @@ describe("toHast", () => {
 									type: "cell",
 									head: false,
 									align: "left",
-									children: [{ type: "text", value: "1" }],
+									children: [
+										{
+											type: "text",
+											value: "1",
+										},
+									],
 								},
 								{
 									type: "cell",
 									head: false,
 									align: "right",
-									children: [{ type: "text", value: "2" }],
+									children: [
+										{
+											type: "text",
+											value: "2",
+										},
+									],
 								},
 							],
 						},
@@ -904,7 +1148,10 @@ describe("toHast", () => {
 			assert.equal(th.properties?.["data-alignment"], "left")
 			const th2 = tr.children[1]!
 			el(th2)
-			assert.equal(th2.properties?.["data-alignment"], "right")
+			assert.equal(
+				th2.properties?.["data-alignment"],
+				"right",
+			)
 		})
 	})
 })

@@ -2,6 +2,7 @@
 	"files": {
 		"includes": [
 			"*.json",
+			"tests/**/*.ts",
 			"packages/*/*.json",
 			"packages/*/src/**/*.ts"
 		]
@@ -34,5 +35,17 @@
 			"nursery": { "useSortedClasses": "error" },
 			"suspicious": { "noUnknownAtRules": "off" }
 		}
-	}
+	},
+	"overrides": [
+		{
+			"includes": ["tests/**/*.ts"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noNonNullAssertion": "off"
+					}
+				}
+			}
+		}
+	]
 }

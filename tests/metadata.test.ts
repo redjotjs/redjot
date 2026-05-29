@@ -1,5 +1,5 @@
-import { describe, it } from "node:test"
 import assert from "node:assert/strict"
+import { describe, it } from "node:test"
 import type { Document, Raw } from "djast"
 import redjotMetadata from "redjot-metadata"
 
@@ -11,7 +11,10 @@ function makeDocWithRaw(format: string, value: string): Document {
 		footnotes: {},
 		children: [
 			{ type: "raw", format, value } as Raw,
-			{ type: "paragraph", children: [{ type: "text", value: "body" }] },
+			{
+				type: "paragraph",
+				children: [{ type: "text", value: "body" }],
+			},
 		],
 	}
 }
@@ -31,17 +34,26 @@ describe("redjot-metadata", () => {
 		extractMetadata(doc)
 
 		assert.equal(doc.children.length, 2)
-		const meta = doc.children[0] as unknown as Record<string, unknown>
+		const meta = doc.children[0] as unknown as Record<
+			string,
+			unknown
+		>
 		assert.equal(meta.type, "metadata")
 		assert.equal(meta.format, "json")
-		assert.equal((meta.value as Record<string, string>).title, "Hello")
+		assert.equal(
+			(meta.value as Record<string, string>).title,
+			"Hello",
+		)
 	})
 
 	it("parses JSON metadata with 'metadata.json' format", () => {
 		const doc = makeDocWithRaw("metadata.json", '{"key": "val"}')
 		extractMetadata(doc)
 
-		const meta = doc.children[0] as unknown as Record<string, unknown>
+		const meta = doc.children[0] as unknown as Record<
+			string,
+			unknown
+		>
 		assert.equal(meta.type, "metadata")
 		assert.equal(meta.format, "json")
 		assert.equal((meta.value as Record<string, string>).key, "val")
@@ -55,11 +67,18 @@ describe("redjot-metadata", () => {
 	})
 
 	it("parses complex JSON metadata", () => {
-		const data = { title: "Test", tags: ["a", "b"], nested: { x: 1 } }
+		const data = {
+			title: "Test",
+			tags: ["a", "b"],
+			nested: { x: 1 },
+		}
 		const doc = makeDocWithRaw("metadata", JSON.stringify(data))
 		extractMetadata(doc)
 
-		const meta = doc.children[0] as unknown as Record<string, unknown>
+		const meta = doc.children[0] as unknown as Record<
+			string,
+			unknown
+		>
 		assert.deepEqual(meta.value, data)
 	})
 
@@ -68,8 +87,8 @@ describe("redjot-metadata", () => {
 		extractMetadata(doc)
 
 		assert.equal(doc.children.length, 2)
-		assert.equal(doc.children[0]!.type, "metadata")
-		assert.equal(doc.children[1]!.type, "paragraph")
+		assert.equal(doc.children[0]?.type, "metadata")
+		assert.equal(doc.children[1]?.type, "paragraph")
 	})
 
 	it("does nothing when there is no metadata raw block", () => {
@@ -79,13 +98,21 @@ describe("redjot-metadata", () => {
 			autoReferences: {},
 			footnotes: {},
 			children: [
-				{ type: "paragraph", children: [{ type: "text", value: "no metadata" }] },
+				{
+					type: "paragraph",
+					children: [
+						{
+							type: "text",
+							value: "no metadata",
+						},
+					],
+				},
 			],
 		}
 		extractMetadata(doc)
 
 		assert.equal(doc.children.length, 1)
-		assert.equal(doc.children[0]!.type, "paragraph")
+		assert.equal(doc.children[0]?.type, "paragraph")
 	})
 
 	it("does nothing when no raw block matches the metadata format", () => {
@@ -95,14 +122,23 @@ describe("redjot-metadata", () => {
 			autoReferences: {},
 			footnotes: {},
 			children: [
-				{ type: "raw", format: "html", value: "<div>hi</div>" } as Raw,
-				{ type: "paragraph", children: [{ type: "text", value: "body" }] },
+				{
+					type: "raw",
+					format: "html",
+					value: "<div>hi</div>",
+				} as Raw,
+				{
+					type: "paragraph",
+					children: [
+						{ type: "text", value: "body" },
+					],
+				},
 			],
 		}
 		extractMetadata(doc)
 
 		assert.equal(doc.children.length, 2)
-		assert.equal(doc.children[0]!.type, "raw")
-		assert.equal(doc.children[1]!.type, "paragraph")
+		assert.equal(doc.children[0]?.type, "raw")
+		assert.equal(doc.children[1]?.type, "paragraph")
 	})
 })
