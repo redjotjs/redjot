@@ -17,6 +17,15 @@ import type {
 	Footnote,
 	FootnoteReference,
 	RawInline,
+	InlineMath,
+	DisplayMath,
+	Url,
+	NonBreakingSpace,
+	Symbol as SymbolNode,
+	Span,
+	DoubleQuoted,
+	SingleQuoted,
+	SmartPunctuation,
 } from "djast"
 
 function el(content: RootContent): asserts content is Element {
@@ -553,5 +562,349 @@ describe("toHast", () => {
 		assert.equal(checkbox.properties?.type, "checkbox")
 		assert.equal(checkbox.properties?.disabled, true)
 		assert.equal(checkbox.properties?.checked, true)
+	})
+
+	describe("additional conversions from syntax.md", () => {
+		it("converts a non-breaking space", () => {
+			const hast = toHast(
+				makeDoc({
+					type: "paragraph",
+					children: [
+						{ type: "text", value: "a" },
+						{ type: "nonBreakingSpace" } as NonBreakingSpace,
+						{ type: "text", value: "b" },
+					],
+				}),
+			)
+			const p = hast.children[0]!
+			el(p)
+			assert.equal(p.children.length, 3)
+			const nbs = p.children[1]!
+			txt(nbs)
+			assert.equal(nbs.value, "\u00A0")
+		})
+
+		it("converts a symbol", () => {
+			const sym: SymbolNode = { type: "symbol", alias: "smile", value: "smile" }
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [sym] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			const text = p.children[0]!
+			txt(text)
+			assert.equal(text.value, ":smile:")
+		})
+
+		it("converts a URL autolink", () => {
+			const url: Url = { type: "url", value: "https://example.com" }
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [url] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			const el_ = p.children[0]!
+			el(el_)
+			assert.equal(el_.tagName, "url")
+			assert.equal(el_.properties?.href, "https://example.com")
+		})
+
+		it("converts inline math", () => {
+			const math: InlineMath = { type: "inlineMath", value: "x^2" }
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [math] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			const span = p.children[0]!
+			el(span)
+			assert.equal(span.tagName, "span")
+			assert.equal(span.properties?.class, "math inline")
+		})
+
+		it("converts display math", () => {
+			const math: DisplayMath = { type: "displayMath", value: "x^n + y^n" }
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [math] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			const span = p.children[0]!
+			el(span)
+			assert.equal(span.tagName, "span")
+			assert.equal(span.properties?.class, "math display")
+		})
+
+		it("converts a span", () => {
+			const span: Span = {
+				type: "span",
+				children: [{ type: "text", value: "hi" }],
+				attributes: { class: "big" },
+			}
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [span] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			const s = p.children[0]!
+			el(s)
+			assert.equal(s.tagName, "span")
+			assert.equal(s.properties?.class, "big")
+		})
+
+		it("converts double-quoted text", () => {
+			const dq: DoubleQuoted = {
+				type: "doubleQuoted",
+				children: [{ type: "text", value: "hello" }],
+			}
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [dq] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			assert.equal(p.children.length, 3)
+			const open = p.children[0]!
+			txt(open)
+			assert.equal(open.value, '"')
+			const content = p.children[1]!
+			txt(content)
+			assert.equal(content.value, "hello")
+			const close = p.children[2]!
+			txt(close)
+			assert.equal(close.value, '"')
+		})
+
+		it("converts single-quoted text", () => {
+			const sq: SingleQuoted = {
+				type: "singleQuoted",
+				children: [{ type: "text", value: "hello" }],
+			}
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [sq] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			assert.equal(p.children.length, 3)
+			const open = p.children[0]!
+			txt(open)
+			assert.equal(open.value, "'")
+			const content = p.children[1]!
+			txt(content)
+			assert.equal(content.value, "hello")
+			const close = p.children[2]!
+			txt(close)
+			assert.equal(close.value, "'")
+		})
+
+		it("converts ellipses smart punctuation", () => {
+			const sp: SmartPunctuation = { type: "smartPunctuation", kind: "ellipses", value: "..." }
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [sp] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			const text = p.children[0]!
+			txt(text)
+			assert.equal(text.value, "...")
+		})
+
+		it("converts en-dash smart punctuation", () => {
+			const sp: SmartPunctuation = { type: "smartPunctuation", kind: "en_dash", value: "--" }
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [sp] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			const text = p.children[0]!
+			txt(text)
+			assert.equal(text.value, "\u2013")
+		})
+
+		it("converts left single quote smart punctuation", () => {
+			const sp: SmartPunctuation = { type: "smartPunctuation", kind: "left_single_quote", value: "'" }
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [sp] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			const text = p.children[0]!
+			txt(text)
+			assert.equal(text.value, "'")
+		})
+
+		it("converts code block without language", () => {
+			const code: Code = { type: "code", value: "hello()" }
+			const hast = toHast(makeDoc(code))
+			const pre = hast.children[0]!
+			el(pre)
+			assert.equal(pre.tagName, "pre")
+			const codeEl = pre.children[0]!
+			el(codeEl)
+			assert.equal(codeEl.tagName, "code")
+			const text = codeEl.children[0]!
+			txt(text)
+			assert.equal(text.value, "hello()")
+		})
+
+		it("converts a loose list (items wrapped in paragraphs)", () => {
+			const list: List = {
+				type: "list",
+				tight: false,
+				style: "-",
+				children: [
+					{ type: "listItem", children: [makePara("one")] },
+					{ type: "listItem", children: [makePara("two")] },
+				],
+			}
+			const hast = toHast(makeDoc(list))
+			const ul = hast.children[0]!
+			el(ul)
+			assert.equal(ul.tagName, "ul")
+			const li = ul.children[0]!
+			el(li)
+			assert.equal(li.tagName, "li")
+			assert.equal(li.children[0]!.type, "element")
+			const p = li.children[0]! as Element
+			assert.equal(p.tagName, "p")
+		})
+
+		it("converts nested sections", () => {
+			const hast = toHast(
+				makeDoc({
+					type: "section",
+					children: [
+						makeHeading(1, "First"),
+						{
+							type: "section",
+							children: [makeHeading(2, "Second"), makePara("Text")],
+						},
+					],
+				}),
+			)
+			const outer = hast.children[0]!
+			el(outer)
+			assert.equal(outer.tagName, "section")
+			const inner = outer.children[1]!
+			el(inner)
+			assert.equal(inner.tagName, "section")
+			assert.equal(inner.children.length, 2)
+		})
+
+		it("skips non-html raw inline", () => {
+			const rawInline: RawInline = {
+				type: "rawInline",
+				value: "\\LaTeX",
+				format: "latex",
+			}
+			const hast = toHast(
+				makeDoc({ type: "paragraph", children: [rawInline] }),
+			)
+			const p = hast.children[0]!
+			el(p)
+			assert.equal(p.children.length, 0)
+		})
+
+		it("does not output start property on ordered list", () => {
+			const ol: OrderedList = {
+				type: "orderedList",
+				style: "1.",
+				tight: true,
+				start: 5,
+				children: [{ type: "listItem", children: [makePara("fifth")] }],
+			}
+			const hast = toHast(makeDoc(ol))
+			const olEl = hast.children[0]!
+			el(olEl)
+			assert.equal(olEl.tagName, "ol")
+			assert.equal(olEl.properties?.start, undefined)
+		})
+
+		it("converts an image with reference", () => {
+			const img: Image = {
+				type: "image",
+				reference: "cat",
+				children: [{ type: "text", value: "kitty" }],
+			}
+			const doc: Document = {
+				type: "document",
+				references: {
+					cat: {
+						type: "reference",
+						label: "cat",
+						destination: "cat.jpg",
+						children: [],
+					},
+				},
+				autoReferences: {},
+				footnotes: {},
+				children: [{ type: "paragraph", children: [img] }],
+			}
+			const hast = toHast(doc)
+			const p = hast.children[0]!
+			el(p)
+			const imgEl = p.children[0]!
+			el(imgEl)
+			assert.equal(imgEl.tagName, "img")
+			assert.equal(imgEl.properties?.src, "cat.jpg")
+		})
+
+		it("converts a table with alignment", () => {
+			const hast = toHast(
+				makeDoc({
+					type: "table",
+					children: [
+						{ type: "caption", children: [{ type: "text", value: "" }] },
+						{
+							type: "row",
+							head: true,
+							children: [
+								{
+									type: "cell",
+									head: true,
+									align: "left",
+									children: [{ type: "text", value: "A" }],
+								},
+								{
+									type: "cell",
+									head: true,
+									align: "right",
+									children: [{ type: "text", value: "B" }],
+								},
+							],
+						},
+						{
+							type: "row",
+							head: false,
+							children: [
+								{
+									type: "cell",
+									head: false,
+									align: "left",
+									children: [{ type: "text", value: "1" }],
+								},
+								{
+									type: "cell",
+									head: false,
+									align: "right",
+									children: [{ type: "text", value: "2" }],
+								},
+							],
+						},
+					],
+				}),
+			)
+			const table = hast.children[0]!
+			el(table)
+			assert.equal(table.tagName, "table")
+			const tr = table.children[1]!
+			el(tr)
+			const th = tr.children[0]!
+			el(th)
+			assert.equal(th.tagName, "th")
+			assert.equal(th.properties?.["data-alignment"], "left")
+			const th2 = tr.children[1]!
+			el(th2)
+			assert.equal(th2.properties?.["data-alignment"], "right")
+		})
 	})
 })
